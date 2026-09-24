@@ -1,0 +1,22 @@
+steps:
+  - name: gcr.io/google.com/cloudsdktool/google-cloud-cli:stable
+    id: validate-request
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        test -n "${_REQUEST_ID}"
+        test -n "${_APPROVED_JSON_URI}"
+        echo "Validated request ${_REQUEST_ID}"
+  - name: gcr.io/google.com/cloudsdktool/google-cloud-cli:stable
+    id: apply-task-roots
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        echo "Infrastructure Manager task deployments are dispatched by the provisioner using an approved commit SHA."
+substitutions:
+  _REQUEST_ID: ""
+  _APPROVED_JSON_URI: ""
+options:
+  logging: CLOUD_LOGGING_ONLY
