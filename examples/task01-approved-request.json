@@ -1,0 +1,22 @@
+{
+  "request_id": "REQ-TASK01-001",
+  "action": "CREATE",
+  "task": { "name": "task01", "namespace": "task01" },
+  "identity": {
+    "group_email": "pgrp-gcp-sbx01@sonmap.net",
+    "members": ["user01@sonmap.net", "user02@sonmap.net"]
+  },
+  "project": { "project_id": "gcp-sbx-edp-comn-509423", "create_project": false },
+  "data": {
+    "bigquery_dataset": "task01_dataset",
+    "gcs_bucket": "gcp-sbx-edp-comn-509423-task01-data"
+  },
+  "gke": {
+    "project_id": "gcp-sbx-edp-gke01",
+    "cluster_name": "gke-sbx-edp-main-an3",
+    "location": "asia-northeast3",
+    "namespace": "task01",
+    "jupyter_domain": "jupyter-task01.sonmap.net"
+  },
+  "source": { "repository": "sonmap/Gcp_Managed_GKE_GIT_ETC_10", "commit_sha": "REPLACE_WITH_APPROVED_40_CHARACTER_COMMIT_SHA" }
+}
