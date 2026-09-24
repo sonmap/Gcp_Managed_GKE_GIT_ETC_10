@@ -25,7 +25,10 @@ resource "google_cloud_run_v2_service" "provisioner" {
     service_account = data.google_service_account.provisioner.email
     containers {
       image = var.provisioner_image
-      env { name = "REQUEST_BUCKET"; value = google_storage_bucket.requests.name }
+      env {
+        name  = "REQUEST_BUCKET"
+        value = google_storage_bucket.requests.name
+      }
     }
   }
   depends_on = [google_project_service.foundation]
