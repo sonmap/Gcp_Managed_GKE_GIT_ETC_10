@@ -1,0 +1,3 @@
+platform_project_id = "gcp-sbx-edp-gke01"
+region              = "asia-northeast3"
+state_bucket_name   = "gcp-sbx-edp-gke01-tfstate"
