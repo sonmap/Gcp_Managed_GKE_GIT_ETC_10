@@ -3,13 +3,15 @@ terraform {
   required_providers { google = { source = "hashicorp/google", version = "~> 6.0" } }
 }
 variable "project_id" { type = string }
-variable "region" { type = string; default = "asia-northeast3" }
+variable "region" { type = string
+  default = "asia-northeast3" }
 variable "task_name" { type = string }
 variable "group_email" { type = string }
 variable "dataset_id" { type = string }
 variable "bucket_name" { type = string }
 variable "workload_identity_pool" { type = string }
-provider "google" { project = var.project_id; region = var.region }
+provider "google" { project = var.project_id
+  region = var.region }
 resource "google_service_account" "jupyter" {
   project = var.project_id
   account_id = "gsa-jupyter-${var.task_name}"
