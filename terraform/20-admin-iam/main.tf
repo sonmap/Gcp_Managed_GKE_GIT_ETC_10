@@ -23,7 +23,7 @@ locals {
       "roles/container.admin", "roles/run.admin", "roles/cloudbuild.builds.editor",
       "roles/artifactregistry.admin", "roles/workflows.admin", "roles/storage.admin",
       "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin",
-      "roles/config.agent"
+      "roles/config.agent", "roles/compute.viewer"
     ])
     project_factory = toset(["roles/config.agent"])
     gke_admin       = toset(["roles/container.admin"])
