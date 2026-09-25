@@ -93,6 +93,18 @@ resource "google_project_iam_member" "vm_infrastructure_manager_admin" {
   member  = "serviceAccount:${var.vm_service_account}"
 }
 
+resource "google_project_iam_member" "vm_operational_roles" {
+  for_each = toset([
+    "roles/cloudbuild.builds.viewer",
+    "roles/logging.viewer",
+    "roles/serviceusage.serviceUsageConsumer"
+  ])
+
+  project = var.platform_project_id
+  role    = each.value
+  member  = "serviceAccount:${var.vm_service_account}"
+}
+
 resource "google_service_account_iam_member" "vm_uses_foundation" {
   service_account_id = google_service_account.automation["im_foundation"].name
   role               = "roles/iam.serviceAccountUser"
