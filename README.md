@@ -15,10 +15,10 @@
 | 00 | `terraform/00-bootstrap` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 10 | `terraform/10-network-host` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 20 | `terraform/20-admin-iam` | instance-son | `admin@sonmap.net` | 수동 Terraform |
-| 30 | `terraform/30-foundation` | instance-son에서 요청 | VM SA → `sa-im-foundation` | Infrastructure Manager |
+| 21 | `terraform/21-enable-apis` | instance-son | `admin@sonmap.net` | 전체 프로젝트 API 통합 |\n| 30 | `terraform/30-foundation` | instance-son에서 요청 | VM SA → `sa-im-foundation` | Infrastructure Manager |
 | 40 | `terraform/40-task/*` | 자동화 | 단계별 전용 SA | 승인 JSON 기반 Infrastructure Manager |
 
-VM 기본 서비스 계정은 `40744085720-compute@developer.gserviceaccount.com`입니다.
+VM 기본 서비스 계정은 `620081195575-compute@developer.gserviceaccount.com`입니다.
 
 ## 디렉터리
 
@@ -27,7 +27,7 @@ terraform/
 ├── 00-bootstrap/
 ├── 10-network-host/
 ├── 20-admin-iam/
-├── 30-foundation/
+├── 21-enable-apis/\n├── 30-foundation/
 └── 40-task/
     ├── 10-project/
     ├── 20-project-iam/
