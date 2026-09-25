@@ -7,6 +7,8 @@ data_project_id          = "gcp-sbx-edp-comn-509423"
 region                   = "asia-northeast3"
 
 vm_service_account       = "620081195575-compute@developer.gserviceaccount.com"
+sandbox_folder_id        = "154455658682"
+billing_account_id       = "019BE7-53DD39-AF5098"
 
 gke_subnet_name          = "subnet-prod-edp-gke-an3"
 cloudrun_subnet_name     = "subnet-prod-edp-run-an3"
