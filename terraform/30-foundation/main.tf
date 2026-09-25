@@ -53,6 +53,13 @@ resource "google_container_cluster" "main" {
     cluster_secondary_range_name = var.gke_pod_range_name
   }
 
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = var.admin_access_cidr
+      display_name = "admin-management-subnet"
+    }
+  }
+
   private_cluster_config {
     enable_private_nodes    = true
     enable_private_endpoint = true
