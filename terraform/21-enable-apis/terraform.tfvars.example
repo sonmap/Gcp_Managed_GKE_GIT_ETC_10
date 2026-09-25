@@ -1,4 +1,3 @@
-host_project_id     = "gcp-prod-edp-hub-vpchost"
 platform_project_id = "gcp-sbx-edp-gke01"
 data_project_id     = "gcp-sbx-edp-comn-509423"
 region              = "asia-northeast3"
