@@ -3,6 +3,8 @@ data "google_project" "platform" {
 }
 
 locals {
+  default_compute_service_account = "${data.google_project.platform.number}-compute@developer.gserviceaccount.com"
+
   service_accounts = {
     im_foundation   = "sa-im-foundation"
     project_factory = "sa-im-project-factory"
@@ -150,6 +152,20 @@ resource "google_service_account_iam_member" "vm_uses_foundation" {
   service_account_id = google_service_account.automation["im_foundation"].name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${var.vm_service_account}"
+}
+
+# Infrastructure Manager creates the GKE cluster and attaches the platform
+# project's default Compute Engine service account to Autopilot nodes.
+resource "google_service_account_iam_member" "foundation_uses_default_compute" {
+  service_account_id = "projects/${var.platform_project_id}/serviceAccounts/${local.default_compute_service_account}"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.automation["im_foundation"].email}"
+}
+
+resource "google_project_iam_member" "default_compute_gke_node" {
+  project = var.platform_project_id
+  role    = "roles/container.defaultNodeServiceAccount"
+  member  = "serviceAccount:${local.default_compute_service_account}"
 }
 
 resource "google_service_account_iam_member" "build_uses_task_sa" {
