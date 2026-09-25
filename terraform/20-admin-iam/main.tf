@@ -23,7 +23,8 @@ locals {
       "roles/container.admin", "roles/run.admin", "roles/cloudbuild.builds.editor",
       "roles/artifactregistry.admin", "roles/workflows.admin", "roles/storage.admin",
       "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin",
-      "roles/config.agent", "roles/compute.viewer"
+      "roles/certificatemanager.owner", "roles/compute.publicIpAdmin", "roles/compute.viewer",
+      "roles/config.agent", "roles/dns.admin"
     ])
     project_factory = toset(["roles/config.agent"])
     gke_admin       = toset(["roles/container.admin"])
@@ -154,6 +155,12 @@ resource "google_project_iam_member" "vm_operational_roles" {
 resource "google_service_account_iam_member" "vm_uses_foundation" {
   service_account_id = google_service_account.automation["im_foundation"].name
   role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${var.vm_service_account}"
+}
+
+resource "google_service_account_iam_member" "vm_impersonates_gke_admin" {
+  service_account_id = google_service_account.automation["gke_admin"].name
+  role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:${var.vm_service_account}"
 }
 

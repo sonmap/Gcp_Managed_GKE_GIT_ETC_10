@@ -90,3 +90,24 @@ resource "google_service_networking_connection" "private_service_access" {
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.cloudbuild_psa.name]
 }
+
+# GKE Gateway firewall rules aren't created automatically in Shared VPC.
+# Permit Google load balancer health checks to reach Gateway NEGs.
+resource "google_compute_firewall" "gke_gateway_health_checks" {
+  project     = var.host_project_id
+  name        = "fw-allow-gke-gateway-health-checks"
+  network     = google_compute_network.shared.name
+  direction   = "INGRESS"
+  priority    = 1000
+  description = "Allow Google health checks for GKE Gateway backends."
+
+  source_ranges = [
+    "35.191.0.0/16",
+    "130.211.0.0/22"
+  ]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["1-65535"]
+  }
+}

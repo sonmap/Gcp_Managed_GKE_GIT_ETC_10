@@ -69,4 +69,8 @@ resource "google_container_cluster" "main" {
   release_channel {
     channel = "REGULAR"
   }
+
+  gateway_api_config {
+    channel = "CHANNEL_STANDARD"
+  }
 }

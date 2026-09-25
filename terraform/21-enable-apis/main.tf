@@ -4,11 +4,13 @@ locals {
       project_id = var.platform_project_id
       services = toset([
         "artifactregistry.googleapis.com",
+        "certificatemanager.googleapis.com",
         "cloudbuild.googleapis.com",
         "cloudresourcemanager.googleapis.com",
         "compute.googleapis.com",
         "config.googleapis.com",
         "container.googleapis.com",
+        "dns.googleapis.com",
         "eventarc.googleapis.com",
         "iam.googleapis.com",
         "iamcredentials.googleapis.com",

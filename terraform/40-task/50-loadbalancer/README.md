@@ -1,13 +1,18 @@
-# task Load Balancer deployment
+# Namespace routing through the shared External HTTPS Gateway
 
-이 Root는 JupyterHub Service가 standalone NEG를 생성한 뒤 실행합니다.
+The shared external Application Load Balancer is bootstrapped in `30-foundation`:
 
-입력값:
+- Gateway: `gateway-system/external-https-gateway`
+- GatewayClass: `gke-l7-global-external-managed`
+- Static public IP: `ip-sbx-external-gateway`
+- Certificate map: `cm-sbx-external-gateway`
+- Public DNS zone: `gke.sonmap.net`
 
-- GKE 서비스 프로젝트: `gcp-sbx-edp-gke01`
-- 리전: `asia-northeast3`
-- task 이름과 도메인
-- GKE가 생성한 NEG self link
-- Internal ALB frontend IP: `172.31.96.10`
+Each task root creates its own namespace, Service, and HTTPRoute. For example:
 
-Regional Internal Application Load Balancer의 URL map에 task별 host rule을 추가합니다. 인증서 정책과 사내 DNS가 확정되기 전에는 실제 forwarding rule을 생성하지 않습니다.
+- `task01.gke.sonmap.net` -> `task01/web-task01`
+- `task02.gke.sonmap.net` -> `task02/web-task02`
+
+Do not create a separate load balancer for every namespace. Attach additional HTTPRoute resources to the shared Gateway.
+
+The parent `sonmap.net` DNS must delegate `gke.sonmap.net` to the Cloud DNS name servers output by `30-foundation`.
