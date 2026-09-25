@@ -4,3 +4,7 @@ output "enabled_services" {
     key => service.service
   }
 }
+
+output "gke_service_identity" {
+  value = google_project_service_identity.gke.email
+}
