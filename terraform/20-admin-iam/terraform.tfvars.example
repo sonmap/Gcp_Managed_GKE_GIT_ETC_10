@@ -1,0 +1,10 @@
+platform_project_id       = "gcp-sbx-edp-gke01"
+host_project_id           = "gcp-prod-edp-hub-vpchost"
+data_project_id           = "gcp-sbx-edp-comn-509423"
+region                    = "asia-northeast3"
+
+vm_service_account        = "40744085720-compute@developer.gserviceaccount.com"
+
+gke_subnet_name           = "subnet-prod-edp-gke-an3"
+cloudrun_subnet_name      = "subnet-prod-edp-run-an3"
+alb_frontend_subnet_name  = "subnet-prod-edp-alb-frontend-an3"
