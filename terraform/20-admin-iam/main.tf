@@ -139,8 +139,11 @@ resource "google_project_iam_member" "vm_infrastructure_manager_admin" {
 
 resource "google_project_iam_member" "vm_operational_roles" {
   for_each = toset([
+    "roles/artifactregistry.reader",
     "roles/cloudbuild.builds.viewer",
-    "roles/logging.viewer"
+    "roles/container.clusterViewer",
+    "roles/logging.viewer",
+    "roles/storage.bucketViewer"
   ])
 
   project = var.platform_project_id
