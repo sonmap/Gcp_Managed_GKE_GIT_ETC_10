@@ -1,3 +1,7 @@
+data "google_project" "platform" {
+  project_id = var.platform_project_id
+}
+
 locals {
   service_accounts = {
     im_foundation   = "sa-im-foundation"
@@ -80,6 +84,25 @@ resource "google_project_iam_member" "foundation_host_network_viewer" {
   project = var.host_project_id
   role    = "roles/compute.networkViewer"
   member  = "serviceAccount:${google_service_account.automation["im_foundation"].email}"
+}
+
+resource "google_project_iam_member" "gke_host_service_agent_user" {
+  project = var.host_project_id
+  role    = "roles/container.hostServiceAgentUser"
+  member  = "serviceAccount:service-${data.google_project.platform.number}@container-engine-robot.iam.gserviceaccount.com"
+}
+
+resource "google_compute_subnetwork_iam_member" "gke_service_agents_network_user" {
+  for_each = toset([
+    "serviceAccount:service-${data.google_project.platform.number}@container-engine-robot.iam.gserviceaccount.com",
+    "serviceAccount:${data.google_project.platform.number}@cloudservices.gserviceaccount.com"
+  ])
+
+  project    = var.host_project_id
+  region     = var.region
+  subnetwork = var.gke_subnet_name
+  role       = "roles/compute.networkUser"
+  member     = each.value
 }
 
 resource "google_compute_subnetwork_iam_member" "gke_network_user" {
