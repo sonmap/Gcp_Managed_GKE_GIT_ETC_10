@@ -1,0 +1,7 @@
+{
+  "gke_project_id": "gcp-sbx-edp-gke01",
+  "cluster_name": "gke-sbx-edp-main-an3",
+  "location": "asia-northeast3",
+  "task_name": "task01",
+  "jupyter_gsa_email": "gsa-jupyter-task01@gcp-sbx-edp-comn-509423.iam.gserviceaccount.com"
+}
