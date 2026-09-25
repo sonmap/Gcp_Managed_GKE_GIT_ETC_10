@@ -23,6 +23,16 @@ variable "vm_service_account" {
   default = "620081195575-compute@developer.gserviceaccount.com"
 }
 
+variable "sandbox_folder_id" {
+  type    = string
+  default = "154455658682"
+}
+
+variable "billing_account_id" {
+  type    = string
+  default = "019BE7-53DD39-AF5098"
+}
+
 variable "gke_subnet_name" {
   type    = string
   default = "subnet-prod-edp-gke-an3"
