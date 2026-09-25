@@ -22,7 +22,10 @@ resource "google_storage_bucket" "requests" {
   location                    = var.region
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
-  versioning { enabled = true }
+
+  versioning {
+    enabled = true
+  }
 }
 
 resource "google_storage_bucket" "bundles" {
@@ -31,22 +34,23 @@ resource "google_storage_bucket" "bundles" {
   location                    = var.region
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
-  versioning { enabled = true }
+
+  versioning {
+    enabled = true
+  }
 }
 
 resource "google_container_cluster" "main" {
-  provider = google
-  project  = var.platform_project_id
-  name     = var.cluster_name
-  location = var.region
-  network    = data.google_compute_network.shared.self_link
-  subnetwork = data.google_compute_subnetwork.gke.self_link
-  enable_autopilot = true
+  project             = var.platform_project_id
+  name                = var.cluster_name
+  location            = var.region
+  network             = data.google_compute_network.shared.self_link
+  subnetwork          = data.google_compute_subnetwork.gke.self_link
+  enable_autopilot    = true
   deletion_protection = true
 
   ip_allocation_policy {
     cluster_secondary_range_name = var.gke_pod_range_name
-    services_ipv4_cidr_block     = var.gke_service_cidr
   }
 
   private_cluster_config {
@@ -55,5 +59,7 @@ resource "google_container_cluster" "main" {
     master_ipv4_cidr_block  = var.control_plane_cidr
   }
 
-  release_channel { channel = "REGULAR" }
+  release_channel {
+    channel = "REGULAR"
+  }
 }
