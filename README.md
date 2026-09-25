@@ -15,7 +15,8 @@
 | 00 | `terraform/00-bootstrap` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 10 | `terraform/10-network-host` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 20 | `terraform/20-admin-iam` | instance-son | `admin@sonmap.net` | 수동 Terraform |
-| 21 | `terraform/21-enable-apis` | instance-son | `admin@sonmap.net` | 전체 프로젝트 API 통합 |\n| 30 | `terraform/30-foundation` | instance-son에서 요청 | VM SA → `sa-im-foundation` | Infrastructure Manager |
+| 21 | `terraform/21-enable-apis` | instance-son | `admin@sonmap.net` | 신규 Platform/Data API 통합 |
+| 30 | `terraform/30-foundation` | instance-son에서 요청 | VM SA → `sa-im-foundation` | Infrastructure Manager |
 | 40 | `terraform/40-task/*` | 자동화 | 단계별 전용 SA | 승인 JSON 기반 Infrastructure Manager |
 
 VM 기본 서비스 계정은 `620081195575-compute@developer.gserviceaccount.com`입니다.
@@ -27,7 +28,8 @@ terraform/
 ├── 00-bootstrap/
 ├── 10-network-host/
 ├── 20-admin-iam/
-├── 21-enable-apis/\n├── 30-foundation/
+├── 21-enable-apis/
+├── 30-foundation/
 └── 40-task/
     ├── 10-project/
     ├── 20-project-iam/
@@ -40,7 +42,9 @@ docs/execution-and-iam.md
 
 ## 안전 원칙
 
-- 00/10/20의 Plan은 관리자 검토 후 적용합니다.
+- 기존 Host 프로젝트 API는 `scripts/enable-existing-host-apis.sh`로 별도 활성화합니다.
+- 21단계 Terraform은 신규 Platform/Data 프로젝트 API만 관리합니다.
+- 00/10/20/21의 Plan은 관리자 검토 후 적용합니다.
 - 30 이후에는 사용자 ADC와 `GOOGLE_OAUTH_ACCESS_TOKEN`을 제거합니다.
 - Infrastructure Manager 소스는 이동하는 branch 대신 승인된 commit SHA를 사용합니다.
 - 로컬 `terraform.tfvars`, State, Plan, 인증키는 Git에 저장하지 않습니다.
