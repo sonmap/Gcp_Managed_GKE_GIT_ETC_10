@@ -47,7 +47,9 @@ resource "google_container_cluster" "main" {
   network             = data.google_compute_network.shared.self_link
   subnetwork          = data.google_compute_subnetwork.gke.self_link
   enable_autopilot    = true
-  deletion_protection = true
+  # Temporary: allow replacement of the cluster tainted by the failed initial apply.
+  # Restore this to true after the replacement succeeds.
+  deletion_protection = false
 
   ip_allocation_policy {
     cluster_secondary_range_name = var.gke_pod_range_name
