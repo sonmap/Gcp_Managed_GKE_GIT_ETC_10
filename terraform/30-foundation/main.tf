@@ -1,18 +1,3 @@
-locals {
-  services = toset([
-    "artifactregistry.googleapis.com", "cloudbuild.googleapis.com", "run.googleapis.com",
-    "container.googleapis.com", "config.googleapis.com", "workflows.googleapis.com",
-    "workflowexecutions.googleapis.com", "secretmanager.googleapis.com"
-  ])
-}
-
-resource "google_project_service" "foundation" {
-  for_each           = local.services
-  project            = var.platform_project_id
-  service            = each.value
-  disable_on_destroy = false
-}
-
 data "google_compute_network" "shared" {
   project = var.host_project_id
   name    = var.network_name
@@ -29,7 +14,6 @@ resource "google_artifact_registry_repository" "platform" {
   location      = var.region
   repository_id = var.artifact_repository
   format        = "DOCKER"
-  depends_on    = [google_project_service.foundation]
 }
 
 resource "google_storage_bucket" "requests" {
@@ -72,5 +56,4 @@ resource "google_container_cluster" "main" {
   }
 
   release_channel { channel = "REGULAR" }
-  depends_on = [google_project_service.foundation]
 }
