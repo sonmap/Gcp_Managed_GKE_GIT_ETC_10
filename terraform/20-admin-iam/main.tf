@@ -16,7 +16,8 @@ locals {
     im_foundation = toset([
       "roles/container.admin", "roles/run.admin", "roles/cloudbuild.builds.editor",
       "roles/artifactregistry.admin", "roles/workflows.admin", "roles/storage.admin",
-      "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin"
+      "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin",
+      "roles/config.agent"
     ])
     gke_admin = toset(["roles/container.admin"])
     lb_admin  = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
