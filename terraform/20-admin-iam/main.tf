@@ -86,6 +86,12 @@ resource "google_compute_subnetwork_iam_member" "lb_network_user" {
   member     = "serviceAccount:${google_service_account.automation["lb_admin"].email}"
 }
 
+resource "google_project_iam_member" "vm_infrastructure_manager_admin" {
+  project = var.platform_project_id
+  role    = "roles/config.admin"
+  member  = "serviceAccount:${var.vm_service_account}"
+}
+
 resource "google_service_account_iam_member" "vm_uses_foundation" {
   service_account_id = google_service_account.automation["im_foundation"].name
   role               = "roles/iam.serviceAccountUser"
