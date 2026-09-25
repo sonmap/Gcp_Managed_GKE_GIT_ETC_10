@@ -59,3 +59,11 @@ resource "google_project_service" "all" {
   service            = each.value.service
   disable_on_destroy = false
 }
+
+resource "google_project_service_identity" "gke" {
+  provider = google-beta
+  project  = var.platform_project_id
+  service  = "container.googleapis.com"
+
+  depends_on = [google_project_service.all]
+}
