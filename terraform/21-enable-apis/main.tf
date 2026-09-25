@@ -1,16 +1,5 @@
 locals {
   project_services = {
-    host = {
-      project_id = var.host_project_id
-      services = toset([
-        "cloudresourcemanager.googleapis.com",
-        "compute.googleapis.com",
-        "iam.googleapis.com",
-        "iamcredentials.googleapis.com",
-        "serviceusage.googleapis.com",
-        "servicenetworking.googleapis.com"
-      ])
-    }
     platform = {
       project_id = var.platform_project_id
       services = toset([
@@ -34,6 +23,7 @@ locals {
         "workflowexecutions.googleapis.com"
       ])
     }
+
     data = {
       project_id = var.data_project_id
       services = toset([
@@ -60,7 +50,11 @@ locals {
 }
 
 resource "google_project_service" "all" {
-  for_each = { for binding in local.service_bindings : binding.key => binding }
+  for_each = {
+    for binding in local.service_bindings :
+    binding.key => binding
+  }
+
   project            = each.value.project_id
   service            = each.value.service
   disable_on_destroy = false
