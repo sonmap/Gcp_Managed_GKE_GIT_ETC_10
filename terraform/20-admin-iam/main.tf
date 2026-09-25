@@ -19,7 +19,8 @@ locals {
       "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin",
       "roles/config.agent"
     ])
-    gke_admin = toset(["roles/container.admin"])
+    project_factory = toset(["roles/config.agent"])
+    gke_admin       = toset(["roles/container.admin"])
     lb_admin  = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
     build     = toset(["roles/cloudbuild.builds.builder", "roles/config.admin", "roles/container.developer"])
     provisioner = toset(["roles/cloudbuild.builds.editor", "roles/storage.objectAdmin"])
@@ -45,6 +46,18 @@ resource "google_project_iam_member" "platform" {
   project  = var.platform_project_id
   role     = each.value.role
   member   = "serviceAccount:${google_service_account.automation[each.value.sa_key].email}"
+}
+
+resource "google_folder_iam_member" "project_factory_creator" {
+  folder = var.sandbox_folder_id
+  role   = "roles/resourcemanager.projectCreator"
+  member = "serviceAccount:${google_service_account.automation["project_factory"].email}"
+}
+
+resource "google_billing_account_iam_member" "project_factory_billing_user" {
+  billing_account_id = var.billing_account_id
+  role               = "roles/billing.user"
+  member             = "serviceAccount:${google_service_account.automation["project_factory"].email}"
 }
 
 resource "google_project_iam_member" "data_admin" {
@@ -108,6 +121,14 @@ resource "google_service_account_iam_member" "vm_uses_foundation" {
   service_account_id = google_service_account.automation["im_foundation"].name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${var.vm_service_account}"
+}
+
+resource "google_service_account_iam_member" "build_uses_task_sa" {
+  for_each = toset(["project_factory", "project_iam", "data_admin", "gke_admin", "lb_admin"])
+
+  service_account_id = google_service_account.automation[each.value].name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.automation["build"].email}"
 }
 
 resource "google_service_account_iam_member" "build_impersonates_task_sa" {
