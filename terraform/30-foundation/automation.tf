@@ -31,5 +31,4 @@ resource "google_cloud_run_v2_service" "provisioner" {
       }
     }
   }
-  depends_on = [google_project_service.foundation]
 }
