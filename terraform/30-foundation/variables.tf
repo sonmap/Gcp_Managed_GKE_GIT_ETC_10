@@ -28,11 +28,6 @@ variable "gke_pod_range_name" {
   default = "pods-prod-edp-gke-an3"
 }
 
-variable "gke_service_cidr" {
-  type    = string
-  default = "34.118.224.0/20"
-}
-
 variable "control_plane_cidr" {
   type    = string
   default = "10.253.0.0/28"
