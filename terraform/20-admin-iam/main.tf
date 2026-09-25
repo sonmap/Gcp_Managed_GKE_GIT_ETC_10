@@ -76,6 +76,12 @@ resource "google_project_iam_member" "project_iam_admin" {
   member  = "serviceAccount:${google_service_account.automation["project_iam"].email}"
 }
 
+resource "google_project_iam_member" "foundation_host_network_viewer" {
+  project = var.host_project_id
+  role    = "roles/compute.networkViewer"
+  member  = "serviceAccount:${google_service_account.automation["im_foundation"].email}"
+}
+
 resource "google_compute_subnetwork_iam_member" "gke_network_user" {
   project    = var.host_project_id
   region     = var.region
