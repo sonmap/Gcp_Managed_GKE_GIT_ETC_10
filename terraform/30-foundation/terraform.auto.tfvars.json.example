@@ -1,0 +1,16 @@
+{
+  "platform_project_id": "gcp-sbx-edp-gke01",
+  "host_project_id": "gcp-prod-edp-hub-vpchost",
+  "region": "asia-northeast3",
+  "network_name": "vpc-prod-edp-hub",
+  "gke_subnet_name": "subnet-prod-edp-gke-an3",
+  "gke_pod_range_name": "pods-prod-edp-gke-an3",
+  "gke_service_cidr": "34.118.224.0/20",
+  "control_plane_cidr": "10.253.0.0/28",
+  "cluster_name": "gke-sbx-edp-main-an3",
+  "artifact_repository": "ar-sbx-platform",
+  "request_bucket_name": "gcp-sbx-edp-gke01-requests",
+  "bundle_bucket_name": "gcp-sbx-edp-gke01-bundles",
+  "enable_automation_resources": false,
+  "provisioner_image": "asia-northeast3-docker.pkg.dev/gcp-sbx-edp-gke01/ar-sbx-platform/sandbox-provisioner:latest"
+}
