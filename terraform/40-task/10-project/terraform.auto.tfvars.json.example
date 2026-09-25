@@ -1,4 +1,8 @@
 {
   "project_id": "gcp-sbx-edp-comn-509423",
+  "project_name": "EDP Sandbox Task 01",
+  "create_project": false,
+  "folder_id": "154455658682",
+  "billing_account_id": "019BE7-53DD39-AF5098",
   "region": "asia-northeast3"
 }
