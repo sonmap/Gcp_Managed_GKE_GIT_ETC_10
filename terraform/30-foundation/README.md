@@ -21,4 +21,4 @@ The Gateway uses one external Application Load Balancer. Each task adds an HTTPR
 
 This POC intentionally uses HTTP. Do not send passwords or production data over this endpoint.
 
-`infra-son01` uses `172.32.10.0/24`, which this PSC-based GKE control plane doesn't accept in its private endpoint authorized-network list. The public endpoint remains disabled. For this POC, authorized networks aren't enforced on the private endpoint; IAM and Kubernetes RBAC are still enforced. Move the admin VM to an RFC1918 subnet before production use.
+`infra-son01` is moved to `subnet-prod-edp-infra-admin-an3` (`172.32.10.0/24`) in `vpc-prod-edp-hub`, which is the same VPC used by GKE. Because this range isn't accepted in the PSC private endpoint authorized-network list, authorized networks aren't enforced on the private endpoint for this POC; IAM and Kubernetes RBAC are still enforced.

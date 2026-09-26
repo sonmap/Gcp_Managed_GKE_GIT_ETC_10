@@ -24,6 +24,15 @@ resource "google_compute_subnetwork" "admin" {
   private_ip_google_access = true
 }
 
+resource "google_compute_subnetwork" "infra_admin" {
+  project                  = var.host_project_id
+  name                     = "subnet-prod-edp-infra-admin-an3"
+  region                   = var.region
+  network                  = google_compute_network.shared.id
+  ip_cidr_range            = var.infra_admin_subnet_cidr
+  private_ip_google_access = true
+}
+
 resource "google_compute_subnetwork" "alb_frontend" {
   project                  = var.host_project_id
   name                     = "subnet-prod-edp-alb-frontend-an3"

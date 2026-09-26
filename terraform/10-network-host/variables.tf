@@ -23,6 +23,11 @@ variable "admin_subnet_cidr" {
   default = "172.31.10.0/24" 
 }
 
+variable "infra_admin_subnet_cidr" {
+  type    = string
+  default = "172.32.10.0/24"
+}
+
 variable "alb_frontend_cidr" {
   type = string
   default = "172.31.96.0/27" 

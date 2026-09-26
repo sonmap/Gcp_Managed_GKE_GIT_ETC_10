@@ -25,7 +25,7 @@ gcloud container clusters get-credentials "${CLUSTER_NAME}" \
   --internal-ip
 
 if ! kubectl --request-timeout=15s get --raw=/readyz >/dev/null; then
-  echo "Cannot reach the GKE private endpoint. Check master authorized networks." >&2
+  echo "Cannot reach the GKE private endpoint. Check the VM network and routes." >&2
   exit 1
 fi
 
