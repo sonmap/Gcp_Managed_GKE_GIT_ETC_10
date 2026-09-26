@@ -62,23 +62,3 @@ variable "gateway_ip_name" {
   type    = string
   default = "ip-sbx-external-gateway"
 }
-
-variable "gateway_dns_zone_name" {
-  type    = string
-  default = "gke-sonmap-net"
-}
-
-variable "gateway_dns_name" {
-  type    = string
-  default = "gke.sonmap.net."
-}
-
-variable "gateway_certificate_name" {
-  type    = string
-  default = "cert-sbx-external-gateway"
-}
-
-variable "gateway_certificate_map_name" {
-  type    = string
-  default = "cm-sbx-external-gateway"
-}

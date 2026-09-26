@@ -38,4 +38,4 @@ for attempt in $(seq 1 30); do
 done
 
 kubectl apply -f "${GATEWAY_MANIFEST}"
-kubectl get gateway external-https-gateway -n gateway-system
+kubectl get gateway external-http-gateway -n gateway-system

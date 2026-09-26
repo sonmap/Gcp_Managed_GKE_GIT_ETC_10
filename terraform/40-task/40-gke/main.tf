@@ -50,16 +50,16 @@ variable "gateway_namespace" {
 
 variable "gateway_name" {
   type    = string
-  default = "external-https-gateway"
+  default = "external-http-gateway"
 }
 
-variable "gateway_dns_name" {
+variable "gateway_hostname_suffix" {
   type    = string
-  default = "gke.sonmap.net"
+  default = "test"
 }
 
 locals {
-  task_hostname        = "${var.task_name}.${trimsuffix(var.gateway_dns_name, ".")}"
+  task_hostname        = "jupyter-${var.task_name}.${trimsuffix(var.gateway_hostname_suffix, ".")}"
   backend_service_name = "web-${var.task_name}"
   app_labels = {
     app  = "task-test-web"
@@ -226,7 +226,7 @@ resource "kubernetes_manifest" "task_route" {
         kind        = "Gateway"
         name        = var.gateway_name
         namespace   = var.gateway_namespace
-        sectionName = "https"
+        sectionName = "http"
       }]
       hostnames = [local.task_hostname]
       rules = [{
