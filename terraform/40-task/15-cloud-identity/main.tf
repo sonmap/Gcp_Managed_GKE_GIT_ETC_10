@@ -3,7 +3,6 @@ resource "google_cloud_identity_group" "task" {
   description          = "Sandbox task01 access group"
   initial_group_config = "WITH_INITIAL_OWNER"
   parent               = "customers/${var.customer_id}"
-  deletion_policy      = "PREVENT"
 
   group_key {
     id = var.group_email
@@ -11,6 +10,10 @@ resource "google_cloud_identity_group" "task" {
 
   labels = {
     "cloudidentity.googleapis.com/groups.security" = ""
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
