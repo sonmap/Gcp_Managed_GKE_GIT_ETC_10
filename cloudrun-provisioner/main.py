@@ -81,6 +81,8 @@ def im_blueprint(document: dict) -> dict:
         "task_name": task,
         "group_email": require(document, "identity.group_email"),
         "dataset_id": require(document, "data.bigquery_dataset"),
+        "source_data_project_id": require(document, "data.source_project_id"),
+        "source_dataset_id": require(document, "data.source_dataset_id"),
         "bucket_name": require(document, "data.gcs_bucket"),
         "workload_identity_pool": f"{platform_project}.svc.id.goog",
     }
