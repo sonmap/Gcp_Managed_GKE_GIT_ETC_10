@@ -84,6 +84,12 @@ resource "google_project_iam_member" "data_admin" {
   member  = "serviceAccount:${google_service_account.automation["data_admin"].email}"
 }
 
+resource "google_project_iam_member" "project_factory_browser" {
+  project = var.data_project_id
+  role    = "roles/browser"
+  member  = "serviceAccount:${google_service_account.automation["project_factory"].email}"
+}
+
 resource "google_project_iam_member" "project_iam_admin" {
   project = var.data_project_id
   role    = "roles/resourcemanager.projectIamAdmin"
