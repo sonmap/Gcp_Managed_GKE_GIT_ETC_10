@@ -204,14 +204,15 @@ def apply_jupyterhub(document: dict) -> None:
         },
         "singleuser": {
             "image": {
-                "name": f"{image_prefix}/jupyterhub-k8s-singleuser-sample",
-                "tag": "4.2.0",
+                "name": f"{image_prefix}/jupyterhub-k8s-singleuser-standard",
+                "tag": "4.2.0-r2",
             },
             "serviceAccountName": ksa,
             "cpu": {"guarantee": 0.5, "limit": 0.5},
             "memory": {"guarantee": "1G", "limit": "1G"},
             "storage": {
                 "type": "dynamic",
+                "homeMountPath": "/home/{username}",
                 "capacity": "40Gi",
                 "dynamic": {"storageClass": "standard-rwo"},
             },
