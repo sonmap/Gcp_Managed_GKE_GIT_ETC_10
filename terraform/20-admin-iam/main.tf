@@ -267,3 +267,12 @@ resource "google_compute_subnetwork_iam_member" "cloud_run_service_agent_network
   role       = "roles/compute.networkUser"
   member     = "serviceAccount:service-${data.google_project.platform.number}@serverless-robot-prod.iam.gserviceaccount.com"
 }
+
+# Bootstrap permission: allows the stage 40 data administrator to grant each
+# Jupyter GSA read access to the existing source dataset.
+resource "google_bigquery_dataset_iam_member" "source_dataset_data_admin" {
+  project    = var.source_data_project_id
+  dataset_id = var.source_dataset_id
+  role       = "roles/bigquery.dataOwner"
+  member     = "serviceAccount:${google_service_account.automation["data_admin"].email}"
+}
