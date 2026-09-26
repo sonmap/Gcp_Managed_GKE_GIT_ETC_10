@@ -5,9 +5,6 @@
   "network_name": "vpc-prod-edp-hub",
   "gke_subnet_name": "subnet-prod-edp-gke-an3",
   "gke_pod_range_name": "pods-prod-edp-gke-an3",
-  "admin_access_cidrs": {
-    "instance-son": "172.31.10.0/24"
-  },
   "control_plane_cidr": "10.253.0.0/28",
   "cluster_name": "gke-sbx-edp-main-an3",
   "artifact_repository": "ar-sbx-platform",
