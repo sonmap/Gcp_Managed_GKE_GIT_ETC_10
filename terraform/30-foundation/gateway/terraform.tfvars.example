@@ -1,0 +1,7 @@
+platform_project_id       = "gcp-sbx-edp-gke01"
+region                    = "asia-northeast3"
+cluster_name              = "gke-sbx-edp-main-an3"
+gke_admin_service_account = "sa-im-gke-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
+gateway_namespace         = "gateway-system"
+gateway_name              = "external-http-gateway"
+gateway_ip_name           = "ip-sbx-external-gateway"
