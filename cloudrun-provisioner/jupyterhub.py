@@ -159,8 +159,16 @@ def apply_jupyterhub(document: dict) -> None:
     )
 
     allowed_users = document["identity"]["members"]
+    image_prefix = (
+        f"{os.environ.get('REGION', 'asia-northeast3')}-docker.pkg.dev/"
+        f"{platform_project}/ar-sbx-platform"
+    )
     values = {
         "hub": {
+            "image": {
+                "name": f"{image_prefix}/jupyterhub-k8s-hub",
+                "tag": "4.2.0",
+            },
             "config": {
                 "JupyterHub": {"authenticator_class": "google"},
                 "Authenticator": {
@@ -177,22 +185,26 @@ def apply_jupyterhub(document: dict) -> None:
                 },
             },
             "resources": {
-                "requests": {"cpu": "500m", "memory": "1Gi"},
-                "limits": {"cpu": "1", "memory": "2Gi"},
+                "requests": {"cpu": "250m", "memory": "512Mi"},
+                "limits": {"cpu": "500m", "memory": "1Gi"},
             },
         },
         "proxy": {
             "service": {"type": "ClusterIP"},
             "chp": {
+                "image": {
+                    "name": f"{image_prefix}/jupyterhub-configurable-http-proxy",
+                    "tag": "4.6.3",
+                },
                 "resources": {
-                    "requests": {"cpu": "500m", "memory": "512Mi"},
-                    "limits": {"cpu": "500m", "memory": "1Gi"},
+                    "requests": {"cpu": "250m", "memory": "256Mi"},
+                    "limits": {"cpu": "500m", "memory": "512Mi"},
                 },
             },
         },
         "singleuser": {
             "image": {
-                "name": "quay.io/jupyterhub/k8s-singleuser-sample",
+                "name": f"{image_prefix}/jupyterhub-k8s-singleuser-sample",
                 "tag": "4.2.0",
             },
             "serviceAccountName": ksa,
