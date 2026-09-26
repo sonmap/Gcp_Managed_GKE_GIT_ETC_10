@@ -36,8 +36,14 @@ resource "google_cloud_run_v2_service" "provisioner" {
   deletion_protection = false
 
   template {
-    service_account = data.google_service_account.provisioner.email
-    timeout         = "3600s"
+    service_account                 = data.google_service_account.provisioner.email
+    timeout                         = "3600s"
+    max_instance_request_concurrency = 1
+
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 1
+    }
 
     vpc_access {
       network_interfaces {
