@@ -208,8 +208,8 @@ def apply_jupyterhub(document: dict) -> None:
                 "tag": "4.2.0",
             },
             "serviceAccountName": ksa,
-            "cpu": {"guarantee": 2, "limit": 2},
-            "memory": {"guarantee": "2G", "limit": "2G"},
+            "cpu": {"guarantee": 0.5, "limit": 0.5},
+            "memory": {"guarantee": "1G", "limit": "1G"},
             "storage": {
                 "type": "dynamic",
                 "capacity": "40Gi",
