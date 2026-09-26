@@ -57,3 +57,8 @@ variable "gateway_ip_name" {
   type    = string
   default = "ip-sbx-external-gateway"
 }
+
+variable "cloudrun_subnet_name" {
+  type    = string
+  default = "subnet-prod-edp-run-an3"
+}
