@@ -14,6 +14,8 @@ variable "region" {
 variable "task_name" { type = string }
 variable "group_email" { type = string }
 variable "dataset_id" { type = string }
+variable "source_data_project_id" { type = string }
+variable "source_dataset_id" { type = string }
 variable "bucket_name" { type = string }
 variable "workload_identity_pool" { type = string }
 
