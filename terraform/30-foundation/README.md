@@ -15,7 +15,7 @@ This root creates the shared platform foundation and the common external HTTP en
 3. Apply this root through Infrastructure Manager.
 4. Run `bash scripts/apply-30-external-gateway.sh` from `infra-son01`.
 5. Apply `terraform/40-task/40-gke` for each namespace route.
-6. Add the output IP and `jupyter-task01.test` to the client hosts file.
+6. Add the output IP and `jupyter-task01.sonmap.net` to the client hosts file.
 
 The Gateway uses one external Application Load Balancer. Each task adds an HTTPRoute instead of creating another load balancer.
 

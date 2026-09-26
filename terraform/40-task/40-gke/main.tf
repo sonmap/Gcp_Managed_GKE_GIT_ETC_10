@@ -55,7 +55,7 @@ variable "gateway_name" {
 
 variable "gateway_hostname_suffix" {
   type    = string
-  default = "test"
+  default = "sonmap.net"
 }
 
 locals {

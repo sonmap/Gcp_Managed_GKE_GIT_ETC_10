@@ -7,5 +7,5 @@
   "gke_admin_service_account": "sa-im-gke-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com",
   "gateway_namespace": "gateway-system",
   "gateway_name": "external-http-gateway",
-  "gateway_hostname_suffix": "test"
+  "gateway_hostname_suffix": "sonmap.net"
 }

@@ -9,8 +9,8 @@ The shared external Application Load Balancer is bootstrapped in `30-foundation`
 
 Each task root creates its own namespace, Service, and HTTPRoute. For example:
 
-- `jupyter-task01.test` -> `task01/web-task01`
-- `jupyter-task02.test` -> `task02/web-task02`
+- `jupyter-task01.sonmap.net` -> `task01/web-task01`
+- `jupyter-task02.sonmap.net` -> `task02/web-task02`
 
 Do not create a separate load balancer for every namespace. Attach additional HTTPRoute resources to the shared Gateway.
 
