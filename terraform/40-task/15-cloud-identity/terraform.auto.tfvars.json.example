@@ -1,0 +1,11 @@
+{
+  "billing_project_id": "gcp-sbx-edp-gke01",
+  "group_admin_service_account": "sa-sandbox-group-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com",
+  "customer_id": "REPLACE_WITH_WORKSPACE_CUSTOMER_ID",
+  "group_email": "pgrp-gcp-sbx01@sonmap.net",
+  "group_display_name": "GCP Sandbox 01",
+  "members": [
+    "user01@sonmap.net",
+    "user02@sonmap.net"
+  ]
+}

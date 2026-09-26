@@ -1,20 +1,17 @@
-# Cloud Identity group bootstrap
+# Cloud Identity group Terraform
 
-Before stage 40, a Google Workspace Super Admin must delegate the built-in
-`Groups Administrator` role to this service account once:
+This Terraform root creates `pgrp-gcp-sbx01@sonmap.net` as a security group and
+adds the existing `user01@sonmap.net` and `user02@sonmap.net` accounts.
 
-`sa-sandbox-group-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com`
+Before running it, a Google Workspace Super Admin must delegate the built-in
+`Groups Administrator` role to
+`sa-sandbox-group-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com` once.
 
-Use the service account's numeric unique ID when creating the Admin SDK role
-assignment. This is a directory bootstrap action, not a stage-40 execution.
-
-After delegation, stage 40 runs only as the VM service account and impersonates
-the group administrator service account:
+Copy `terraform.auto.tfvars.json.example` to `terraform.auto.tfvars.json` and
+replace `customer_id` with the Google Workspace customer ID. Then run:
 
 ```bash
-gcloud config set account 620081195575-compute@developer.gserviceaccount.com
-./create-group.sh
+./tf.sh init
+./tf.sh plan -out=15-cloud-identity.tfplan
+./tf.sh apply 15-cloud-identity.tfplan
 ```
-
-The script creates `pgrp-gcp-sbx01@sonmap.net` as a security group and adds
-`user01@sonmap.net` and `user02@sonmap.net`. Re-running it is safe.
