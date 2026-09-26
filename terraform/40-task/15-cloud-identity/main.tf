@@ -17,10 +17,16 @@ resource "google_cloud_identity_group" "task" {
   }
 }
 
+resource "time_sleep" "wait_for_group" {
+  depends_on      = [google_cloud_identity_group.task]
+  create_duration = "30s"
+}
+
 resource "google_cloud_identity_group_membership" "members" {
   for_each = var.members
 
-  group = google_cloud_identity_group.task.id
+  group                        = google_cloud_identity_group.task.id
+  create_ignore_already_exists = true
 
   preferred_member_key {
     id = each.value
@@ -29,4 +35,6 @@ resource "google_cloud_identity_group_membership" "members" {
   roles {
     name = "MEMBER"
   }
+
+  depends_on = [time_sleep.wait_for_group]
 }
