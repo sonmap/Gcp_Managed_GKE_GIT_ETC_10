@@ -29,8 +29,8 @@ locals {
     gke_admin       = toset(["roles/container.admin"])
     lb_admin  = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
     build     = toset(["roles/cloudbuild.builds.builder", "roles/config.admin", "roles/container.developer"])
-    provisioner = toset(["roles/cloudbuild.builds.editor", "roles/storage.objectAdmin"])
-    workflow  = toset(["roles/run.invoker"])
+    provisioner = toset(["roles/cloudbuild.builds.editor", "roles/storage.objectAdmin", "roles/config.admin"])
+    workflow  = toset(["roles/run.invoker", "roles/eventarc.eventReceiver"])
     group_admin = toset(["roles/serviceusage.serviceUsageConsumer"])
   }
 
@@ -195,8 +195,30 @@ resource "google_service_account_iam_member" "build_uses_task_sa" {
 }
 
 resource "google_service_account_iam_member" "build_impersonates_task_sa" {
-  for_each = toset(["project_factory", "project_iam", "data_admin", "gke_admin", "lb_admin"])
+  for_each = toset(["project_factory", "project_iam", "data_admin", "gke_admin", "lb_admin", "group_admin"])
   service_account_id = google_service_account.automation[each.value].name
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:${google_service_account.automation["build"].email}"
+}
+
+resource "google_service_account_iam_member" "provisioner_impersonates_task_sa" {
+  for_each = toset(["project_factory", "project_iam", "data_admin", "gke_admin", "lb_admin", "group_admin"])
+
+  service_account_id = google_service_account.automation[each.value].name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${google_service_account.automation["provisioner"].email}"
+}
+
+resource "google_service_account_iam_member" "provisioner_uses_im_service_account" {
+  service_account_id = google_service_account.automation["build"].name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.automation["provisioner"].email}"
+}
+
+resource "google_compute_subnetwork_iam_member" "provisioner_run_network_user" {
+  project    = var.host_project_id
+  region     = var.region
+  subnetwork = var.cloudrun_subnet_name
+  role       = "roles/compute.networkUser"
+  member     = "serviceAccount:${google_service_account.automation["provisioner"].email}"
 }
