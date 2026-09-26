@@ -13,6 +13,7 @@ from google.auth import impersonated_credentials
 from google.auth.transport.requests import AuthorizedSession, Request as AuthRequest
 from google.cloud import storage
 from kubernetes import client
+from jupyterhub import apply_jupyterhub
 from pydantic import BaseModel, Field
 
 app = FastAPI(title="EDP Sandbox Provisioner")
@@ -355,6 +356,7 @@ def provision(req: ProvisionRequest) -> dict:
     try:
         deployment = apply_infrastructure_manager(document)
         apply_gke(document)
+        apply_jupyterhub(document)
     except Exception as exc:
         logger.exception("Manual provision request failed")
         raise HTTPException(500, str(exc)) from exc
@@ -384,6 +386,7 @@ async def storage_event(request: Request) -> dict:
     try:
         deployment = apply_infrastructure_manager(document)
         apply_gke(document)
+        apply_jupyterhub(document)
     except Exception as exc:
         logger.exception("Storage event provision request failed")
         raise HTTPException(500, str(exc)) from exc
