@@ -15,6 +15,8 @@
   },
   "data": {
     "bigquery_dataset": "task01_dataset",
+    "source_project_id": "pjt-c-admin",
+    "source_dataset_id": "dlk_sample",
     "gcs_bucket": "gcp-sbx-edp-comn-509423-task01-data"
   },
   "gke": {
