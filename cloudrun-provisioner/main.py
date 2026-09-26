@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import google.auth
 from fastapi import FastAPI, HTTPException, Request
 from google.auth import impersonated_credentials
-from google.auth.transport.requests import AuthorizedSession, Request
+from google.auth.transport.requests import AuthorizedSession, Request as AuthRequest
 from google.cloud import storage
 from kubernetes import client
 from pydantic import BaseModel, Field
@@ -138,7 +138,7 @@ def kubernetes_api(document: dict):
         target_scopes=["https://www.googleapis.com/auth/cloud-platform"],
         lifetime=3600,
     )
-    credentials.refresh(Request())
+    credentials.refresh(AuthRequest())
     session = AuthorizedSession(credentials)
     url = (
         f"https://container.googleapis.com/v1/projects/{project}/locations/{location}"
