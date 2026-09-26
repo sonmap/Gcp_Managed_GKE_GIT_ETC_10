@@ -29,7 +29,12 @@ locals {
     gke_admin       = toset(["roles/container.admin"])
     lb_admin  = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
     build     = toset(["roles/cloudbuild.builds.builder", "roles/config.admin", "roles/container.developer"])
-    provisioner = toset(["roles/cloudbuild.builds.editor", "roles/storage.objectAdmin", "roles/config.admin"])
+    provisioner = toset([
+      "roles/cloudbuild.builds.editor",
+      "roles/storage.objectAdmin",
+      "roles/config.admin",
+      "roles/serviceusage.serviceUsageConsumer"
+    ])
     workflow  = toset(["roles/run.invoker", "roles/eventarc.eventReceiver"])
     group_admin = toset(["roles/serviceusage.serviceUsageConsumer"])
   }
