@@ -214,7 +214,7 @@ resource "google_service_account_iam_member" "foundation_uses_automation_service
 resource "google_project_iam_member" "default_compute_artifact_reader" {
   project = var.platform_project_id
   role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${data.google_compute_default_service_account.platform.email}"
+  member  = "serviceAccount:${local.default_compute_service_account}"
 }
 
 resource "google_project_iam_member" "default_compute_gke_node" {
