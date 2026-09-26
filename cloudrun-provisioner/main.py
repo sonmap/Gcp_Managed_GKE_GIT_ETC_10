@@ -20,6 +20,16 @@ storage_client = storage.Client()
 logger = logging.getLogger("sandbox-provisioner")
 
 
+def require_success(response):
+    if not response.ok:
+        logger.error(
+            "Google API request failed: status=%s body=%s",
+            response.status_code,
+            response.text,
+        )
+    response.raise_for_status()
+
+
 class ProvisionRequest(BaseModel):
     request_id: str = Field(pattern=r"^[A-Za-z0-9-]{3,80}$")
     approved_json_uri: str = Field(pattern=r"^gs://")
@@ -62,7 +72,7 @@ def im_blueprint(document: dict) -> dict:
     values = {
         "platform_project_id": platform_project,
         "data_project_id": data_project,
-        "create_project": str(bool(document["project"].get("create_project", False))).lower(),
+        "create_project": bool(document["project"].get("create_project", False)),
         "project_name": document["project"].get("project_name", data_project),
         "folder_id": document["project"].get("folder_id", ""),
         "billing_account_id": document["project"].get("billing_account_id", ""),
@@ -84,7 +94,9 @@ def im_blueprint(document: dict) -> dict:
                 "directory": "terraform/40-task/im",
                 "ref": require(document, "source.commit_sha"),
             },
-            "inputValues": values,
+            "inputValues": {
+                key: {"inputValue": value} for key, value in values.items()
+            },
         },
         "labels": {"task": task.lower(), "managed-by": "sandbox-provisioner"},
     }
@@ -95,7 +107,7 @@ def wait_operation(session: AuthorizedSession, operation_name: str) -> None:
     deadline = time.time() + 3300
     while time.time() < deadline:
         response = session.get(url, timeout=60)
-        response.raise_for_status()
+        require_success(response)
         operation = response.json()
         if operation.get("done"):
             if "error" in operation:
@@ -125,7 +137,7 @@ def apply_infrastructure_manager(document: dict) -> str:
             json=body,
             timeout=60,
         )
-    response.raise_for_status()
+    require_success(response)
     wait_operation(session, response.json()["name"])
     return deployment
 
@@ -147,7 +159,7 @@ def kubernetes_api(document: dict):
         f"/clusters/{cluster_name}"
     )
     response = session.get(url, timeout=60)
-    response.raise_for_status()
+    require_success(response)
     cluster = response.json()
     ca_file = tempfile.NamedTemporaryFile(delete=False)
     ca_file.write(base64.b64decode(cluster["masterAuth"]["clusterCaCertificate"]))
