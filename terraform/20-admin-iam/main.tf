@@ -166,7 +166,8 @@ resource "google_project_iam_member" "vm_operational_roles" {
     "roles/eventarc.viewer",
     "roles/logging.viewer",
     "roles/run.viewer",
-    "roles/storage.bucketViewer"
+    "roles/storage.bucketViewer",
+    "roles/secretmanager.secretVersionAdder"
   ])
 
   project = var.platform_project_id
