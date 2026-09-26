@@ -139,3 +139,29 @@ resource "google_compute_firewall" "iap_ssh_infra_admin" {
     ports    = ["22"]
   }
 }
+
+resource "google_compute_router" "infra_admin" {
+  project = var.host_project_id
+  name    = "cr-prod-edp-infra-admin-an3"
+  region  = var.region
+  network = google_compute_network.shared.id
+}
+
+resource "google_compute_router_nat" "infra_admin" {
+  project                            = var.host_project_id
+  name                               = "nat-prod-edp-infra-admin-an3"
+  router                             = google_compute_router.infra_admin.name
+  region                             = var.region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+
+  subnetwork {
+    name                    = google_compute_subnetwork.infra_admin.id
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+  }
+}
