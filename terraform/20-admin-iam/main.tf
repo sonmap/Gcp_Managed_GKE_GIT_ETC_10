@@ -23,7 +23,8 @@ locals {
       "roles/container.admin", "roles/run.admin", "roles/cloudbuild.builds.editor",
       "roles/artifactregistry.admin", "roles/workflows.admin", "roles/storage.admin",
       "roles/secretmanager.admin", "roles/iam.serviceAccountAdmin", "roles/serviceusage.serviceUsageAdmin",
-      "roles/compute.publicIpAdmin", "roles/compute.viewer", "roles/config.agent"
+      "roles/compute.publicIpAdmin", "roles/compute.viewer", "roles/config.agent",
+      "roles/eventarc.admin", "roles/pubsub.admin", "roles/resourcemanager.projectIamAdmin"
     ])
     project_factory = toset(["roles/config.agent"])
     gke_admin       = toset(["roles/container.admin"])
@@ -182,6 +183,14 @@ resource "google_service_account_iam_member" "vm_impersonates_task_admin" {
 # project's default Compute Engine service account to Autopilot nodes.
 resource "google_service_account_iam_member" "foundation_uses_default_compute" {
   service_account_id = "projects/${var.platform_project_id}/serviceAccounts/${local.default_compute_service_account}"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.automation["im_foundation"].email}"
+}
+
+resource "google_service_account_iam_member" "foundation_uses_automation_service_accounts" {
+  for_each = toset(["provisioner", "workflow"])
+
+  service_account_id = google_service_account.automation[each.value].name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.automation["im_foundation"].email}"
 }
