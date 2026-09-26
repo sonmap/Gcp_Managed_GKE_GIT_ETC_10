@@ -32,7 +32,6 @@ variable "admin_access_cidrs" {
   type = map(string)
   default = {
     instance-son = "172.31.10.0/24"
-    infra-son01  = "172.32.10.0/24"
   }
 }
 

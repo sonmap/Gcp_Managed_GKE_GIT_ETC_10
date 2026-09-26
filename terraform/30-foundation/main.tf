@@ -54,6 +54,11 @@ resource "google_container_cluster" "main" {
   }
 
   master_authorized_networks_config {
+    # infra-son01 uses 172.32.10.0/24, which GKE rejects as an authorized
+    # network for a private endpoint. Keep the RFC1918 allowlist for the
+    # public endpoint, but don't enforce it on the private endpoint.
+    private_endpoint_enforcement_enabled = false
+
     dynamic "cidr_blocks" {
       for_each = var.admin_access_cidrs
 

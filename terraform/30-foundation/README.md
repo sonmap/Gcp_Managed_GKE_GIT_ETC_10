@@ -20,3 +20,5 @@ This root creates the shared platform foundation and the common external HTTP en
 The Gateway uses one external Application Load Balancer. Each task adds an HTTPRoute instead of creating another load balancer.
 
 This POC intentionally uses HTTP. Do not send passwords or production data over this endpoint.
+
+`infra-son01` uses `172.32.10.0/24`, which GKE doesn't accept in the private endpoint authorized-network list. For this POC, authorized networks aren't enforced on the private endpoint; IAM and Kubernetes RBAC are still enforced. Move the admin VM to an RFC1918 subnet before production use.
