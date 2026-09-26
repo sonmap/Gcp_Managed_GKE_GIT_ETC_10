@@ -14,8 +14,8 @@
 |---:|---|---|---|---|
 | 00 | `terraform/00-bootstrap` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 10 | `terraform/10-network-host` | instance-son | `admin@sonmap.net` | 수동 Terraform |
-| 20 | `terraform/20-admin-iam` | instance-son | `admin@sonmap.net` | 수동 Terraform |
 | 21 | `terraform/21-enable-apis` | instance-son | `admin@sonmap.net` | 신규 Platform/Data API 통합 |
+| 20 | `terraform/20-admin-iam` | instance-son | `admin@sonmap.net` | 서비스 에이전트 포함 수동 IAM |
 | 30 | `terraform/30-foundation` | instance-son에서 요청 | VM SA → `sa-im-foundation` | Infrastructure Manager |
 | 40 | `terraform/40-task/*` | 자동화 | 단계별 전용 SA | 승인 JSON 기반 Infrastructure Manager |
 
@@ -31,11 +31,9 @@ terraform/
 ├── 21-enable-apis/
 ├── 30-foundation/
 └── 40-task/
-    ├── 10-project/
-    ├── 20-project-iam/
-    ├── 30-data/
-    ├── 40-gke/
-    └── 50-loadbalancer/
+    ├── 15-cloud-identity/
+    ├── im/
+    └── 기존 단계별 참조 Root/
 examples/task01-approved-request.json
 docs/execution-and-iam.md
 ```
@@ -44,7 +42,8 @@ docs/execution-and-iam.md
 
 - 기존 Host 프로젝트 API는 `scripts/enable-existing-host-apis.sh`로 별도 활성화합니다.
 - 21단계 Terraform은 신규 Platform/Data 프로젝트 API만 관리합니다.
-- 00/10/20/21의 Plan은 관리자 검토 후 적용합니다.
+- 신규 구축 순서는 00 → 10 → 21 → 20 → 30 → 40입니다.
+- 21에서 Google 관리 서비스 에이전트를 명시적으로 생성한 후 20에서 IAM을 부여합니다.
 - 30 이후에는 사용자 ADC와 `GOOGLE_OAUTH_ACCESS_TOKEN`을 제거합니다.
 - Infrastructure Manager 소스는 이동하는 branch 대신 승인된 commit SHA를 사용합니다.
 - 로컬 `terraform.tfvars`, State, Plan, 인증키는 Git에 저장하지 않습니다.
