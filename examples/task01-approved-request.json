@@ -6,7 +6,13 @@
     "group_email": "pgrp-gcp-sbx01@sonmap.net",
     "members": ["user01@sonmap.net", "user02@sonmap.net"]
   },
-  "project": { "project_id": "gcp-sbx-edp-comn-509423", "create_project": false },
+  "project": {
+    "project_id": "gcp-sbx-edp-comn-509423",
+    "project_name": "EDP Sandbox Common",
+    "create_project": false,
+    "folder_id": "REPLACE_FOLDER_ID",
+    "billing_account_id": "REPLACE_BILLING_ACCOUNT_ID"
+  },
   "data": {
     "bigquery_dataset": "task01_dataset",
     "gcs_bucket": "gcp-sbx-edp-comn-509423-task01-data"
