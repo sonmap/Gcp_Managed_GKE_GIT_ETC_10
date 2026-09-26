@@ -150,7 +150,9 @@ resource "google_project_iam_member" "vm_operational_roles" {
     "roles/artifactregistry.reader",
     "roles/cloudbuild.builds.viewer",
     "roles/container.clusterViewer",
+    "roles/eventarc.viewer",
     "roles/logging.viewer",
+    "roles/run.viewer",
     "roles/storage.bucketViewer"
   ])
 
