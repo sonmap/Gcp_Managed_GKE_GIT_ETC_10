@@ -1,0 +1,22 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - BASE_IMAGE=${_REGISTRY}/jupyterhub-k8s-singleuser-sample:4.2.0
+      - --build-arg
+      - IMAGE_VERSION=4.2.0-r1
+      - -t
+      - ${_REGISTRY}/jupyterhub-k8s-singleuser-standard:4.2.0-r1
+      - jupyter-singleuser-standard
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGISTRY}/jupyterhub-k8s-singleuser-standard:4.2.0-r1
+
+images:
+  - ${_REGISTRY}/jupyterhub-k8s-singleuser-standard:4.2.0-r1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
