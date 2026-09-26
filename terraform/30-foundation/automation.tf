@@ -65,6 +65,10 @@ resource "google_cloud_run_v2_service" "provisioner" {
         name  = "GKE_ADMIN_SERVICE_ACCOUNT"
         value = "sa-im-gke-admin@${var.platform_project_id}.iam.gserviceaccount.com"
       }
+      env {
+        name  = "PROVISIONER_RELEASE"
+        value = var.provisioner_release
+      }
     }
   }
 }
