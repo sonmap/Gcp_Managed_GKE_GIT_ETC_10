@@ -16,6 +16,6 @@ chmod +x tf.sh
 ./tf.sh plan
 ```
 
-`tf.sh` deliberately ignores a user ADC file and starts with the VM service
-account before the Google provider impersonates the GKE administrator service
-account.
+`tf.sh` selects the VM service account and lets the kubeconfig authentication
+plugin impersonate the GKE administrator service account. It doesn't query GKE
+node instance groups, so extra Compute Viewer permission isn't required.
