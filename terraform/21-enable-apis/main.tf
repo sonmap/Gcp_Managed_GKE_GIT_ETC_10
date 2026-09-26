@@ -6,6 +6,7 @@ locals {
         "artifactregistry.googleapis.com",
         "certificatemanager.googleapis.com",
         "cloudbuild.googleapis.com",
+        "cloudidentity.googleapis.com",
         "cloudresourcemanager.googleapis.com",
         "compute.googleapis.com",
         "config.googleapis.com",
