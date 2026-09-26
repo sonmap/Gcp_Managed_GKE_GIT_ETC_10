@@ -32,6 +32,7 @@ locals {
     provisioner = toset([
       "roles/cloudbuild.builds.editor",
       "roles/storage.objectAdmin",
+      "roles/storage.bucketViewer",
       "roles/config.admin",
       "roles/serviceusage.serviceUsageConsumer"
     ])
