@@ -8,9 +8,14 @@ The global external IP remains managed by the parent `30-foundation` Infrastruct
 For an existing Gateway created by the old script, initialize and import it before planning:
 
 ```bash
-terraform init
-terraform import kubernetes_namespace_v1.gateway_system gateway-system
-terraform import kubernetes_manifest.external_http_gateway \
+chmod +x tf.sh
+./tf.sh init
+./tf.sh import kubernetes_namespace_v1.gateway_system gateway-system
+./tf.sh import kubernetes_manifest.external_http_gateway \
   'apiVersion=gateway.networking.k8s.io/v1,kind=Gateway,namespace=gateway-system,name=external-http-gateway'
-terraform plan
+./tf.sh plan
 ```
+
+`tf.sh` deliberately ignores a user ADC file and starts with the VM service
+account before the Google provider impersonates the GKE administrator service
+account.
