@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Cloud Identity is administered directly by the selected directory admin.
-# Remove impersonation settings left by the GKE steps.
-unset CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT
+BASE_ACCOUNT="${BASE_ACCOUNT:-620081195575-compute@developer.gserviceaccount.com}"
+GROUP_ADMIN_SERVICE_ACCOUNT="${GROUP_ADMIN_SERVICE_ACCOUNT:-sa-sandbox-group-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com}"
+
+# The VM account impersonates the delegated Google Workspace Groups Admin SA.
+gcloud config set account "${BASE_ACCOUNT}" >/dev/null
+export CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT="${GROUP_ADMIN_SERVICE_ACCOUNT}"
 unset GOOGLE_OAUTH_ACCESS_TOKEN
 
 GROUP_EMAIL="${GROUP_EMAIL:-pgrp-gcp-sbx01@sonmap.net}"
