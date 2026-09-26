@@ -47,3 +47,15 @@ variable "alb_frontend_subnet_name" {
   type    = string
   default = "subnet-prod-edp-alb-frontend-an3"
 }
+
+variable "source_data_project_id" {
+  type        = string
+  default     = "pjt-c-admin"
+  description = "Existing project containing the source BigQuery dataset."
+}
+
+variable "source_dataset_id" {
+  type        = string
+  default     = "dlk_sample"
+  description = "Existing BigQuery dataset shared with task Jupyter GSAs."
+}
