@@ -9,7 +9,7 @@ resource "google_cloud_identity_group" "task" {
   }
 
   labels = {
-    "cloudidentity.googleapis.com/groups.security" = ""
+    "cloudidentity.googleapis.com/groups.discussion_forum" = ""
   }
 
   lifecycle {

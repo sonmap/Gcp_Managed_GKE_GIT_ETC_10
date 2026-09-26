@@ -1,6 +1,6 @@
 # Cloud Identity group Terraform
 
-This Terraform root creates `pgrp-gcp-sbx01@sonmap.net` as a security group and
+This Terraform root creates `pgrp-gcp-sbx01@sonmap.net` as a Cloud Identity group and
 adds the existing `user01@sonmap.net` and `user02@sonmap.net` accounts.
 
 Before running it, a Google Workspace Super Admin must delegate the built-in
