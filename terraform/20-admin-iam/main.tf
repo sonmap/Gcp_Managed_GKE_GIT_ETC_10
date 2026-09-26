@@ -35,6 +35,7 @@ locals {
       "roles/storage.objectAdmin",
       "roles/storage.bucketViewer",
       "roles/config.admin",
+      "roles/logging.viewer",
       "roles/serviceusage.serviceUsageConsumer"
     ])
     workflow  = toset(["roles/run.invoker", "roles/eventarc.eventReceiver"])
