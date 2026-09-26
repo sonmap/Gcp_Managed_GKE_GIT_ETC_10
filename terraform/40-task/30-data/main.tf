@@ -10,8 +10,15 @@ variable "group_email" { type = string }
 variable "dataset_id" { type = string }
 variable "bucket_name" { type = string }
 variable "workload_identity_pool" { type = string }
-provider "google" { project = var.project_id
-  region = var.region }
+variable "data_admin_service_account" {
+  type    = string
+  default = "sa-im-data-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
+}
+provider "google" {
+  project                     = var.project_id
+  region                      = var.region
+  impersonate_service_account = var.data_admin_service_account
+}
 resource "google_service_account" "jupyter" {
   project = var.project_id
   account_id = "gsa-jupyter-${var.task_name}"

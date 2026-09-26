@@ -5,5 +5,6 @@
   "group_email": "pgrp-gcp-sbx01@sonmap.net",
   "dataset_id": "task01_dataset",
   "bucket_name": "gcp-sbx-edp-comn-509423-task01-data",
-  "workload_identity_pool": "gcp-sbx-edp-gke01.svc.id.goog"
+  "workload_identity_pool": "gcp-sbx-edp-gke01.svc.id.goog",
+  "data_admin_service_account": "sa-im-data-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
 }

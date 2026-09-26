@@ -1,4 +1,5 @@
 {
   "project_id": "gcp-sbx-edp-comn-509423",
-  "group_email": "pgrp-gcp-sbx01@sonmap.net"
+  "group_email": "pgrp-gcp-sbx01@sonmap.net",
+  "project_iam_service_account": "sa-im-project-iam@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
 }

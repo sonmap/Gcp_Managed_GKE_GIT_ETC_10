@@ -2,13 +2,9 @@ terraform {
   required_version = ">= 1.5.7"
 
   required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 6.0"
-    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.0"
+      version = "~> 2.38"
     }
   }
 }
@@ -43,6 +39,16 @@ variable "gke_admin_service_account" {
   default = "sa-im-gke-admin@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
 }
 
+variable "kubeconfig_path" {
+  type    = string
+  default = "~/.kube/config"
+}
+
+variable "kube_context" {
+  type    = string
+  default = "gke_gcp-sbx-edp-gke01_asia-northeast3_gke-sbx-edp-main-an3"
+}
+
 variable "gateway_namespace" {
   type    = string
   default = "gateway-system"
@@ -67,24 +73,9 @@ locals {
   }
 }
 
-provider "google" {
-  project                     = var.gke_project_id
-  region                      = var.location
-  impersonate_service_account = var.gke_admin_service_account
-}
-
-data "google_client_config" "current" {}
-
-data "google_container_cluster" "main" {
-  project  = var.gke_project_id
-  name     = var.cluster_name
-  location = var.location
-}
-
 provider "kubernetes" {
-  host                   = "https://${data.google_container_cluster.main.endpoint}"
-  token                  = data.google_client_config.current.access_token
-  cluster_ca_certificate = base64decode(data.google_container_cluster.main.master_auth[0].cluster_ca_certificate)
+  config_path    = pathexpand(var.kubeconfig_path)
+  config_context = var.kube_context
 }
 
 resource "kubernetes_namespace_v1" "task" {

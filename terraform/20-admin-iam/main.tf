@@ -163,6 +163,14 @@ resource "google_service_account_iam_member" "vm_impersonates_gke_admin" {
   member             = "serviceAccount:${var.vm_service_account}"
 }
 
+resource "google_service_account_iam_member" "vm_impersonates_task_admin" {
+  for_each = toset(["project_factory", "project_iam", "data_admin", "lb_admin"])
+
+  service_account_id = google_service_account.automation[each.value].name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${var.vm_service_account}"
+}
+
 # Infrastructure Manager creates the GKE cluster and attaches the platform
 # project's default Compute Engine service account to Autopilot nodes.
 resource "google_service_account_iam_member" "foundation_uses_default_compute" {

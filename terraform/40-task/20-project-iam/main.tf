@@ -17,8 +17,14 @@ variable "group_email" {
   type = string
 }
 
+variable "project_iam_service_account" {
+  type    = string
+  default = "sa-im-project-iam@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
+}
+
 provider "google" {
-  project = var.project_id
+  project                     = var.project_id
+  impersonate_service_account = var.project_iam_service_account
 }
 
 resource "google_project_iam_member" "query_job_user" {
