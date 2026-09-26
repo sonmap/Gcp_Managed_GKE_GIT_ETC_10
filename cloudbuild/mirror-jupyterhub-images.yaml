@@ -1,0 +1,33 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["pull", "quay.io/jupyterhub/k8s-hub:4.2.0"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - tag
+      - quay.io/jupyterhub/k8s-hub:4.2.0
+      - ${_REGISTRY}/jupyterhub-k8s-hub:4.2.0
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGISTRY}/jupyterhub-k8s-hub:4.2.0"]
+
+  - name: gcr.io/cloud-builders/docker
+    args: ["pull", "quay.io/jupyterhub/configurable-http-proxy:4.6.3"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - tag
+      - quay.io/jupyterhub/configurable-http-proxy:4.6.3
+      - ${_REGISTRY}/jupyterhub-configurable-http-proxy:4.6.3
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGISTRY}/jupyterhub-configurable-http-proxy:4.6.3"]
+
+  - name: gcr.io/cloud-builders/docker
+    args: ["pull", "quay.io/jupyterhub/k8s-singleuser-sample:4.2.0"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - tag
+      - quay.io/jupyterhub/k8s-singleuser-sample:4.2.0
+      - ${_REGISTRY}/jupyterhub-k8s-singleuser-sample:4.2.0
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGISTRY}/jupyterhub-k8s-singleuser-sample:4.2.0"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
