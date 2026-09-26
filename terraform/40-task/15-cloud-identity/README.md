@@ -4,6 +4,7 @@ Run this once with a Google Workspace or Cloud Identity administrator account.
 
 ```bash
 gcloud config set account admin@sonmap.net
+unset CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT GOOGLE_OAUTH_ACCESS_TOKEN
 gcloud services enable cloudidentity.googleapis.com --project=gcp-sbx-edp-gke01
 ./create-group.sh
 ```

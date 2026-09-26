@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Cloud Identity is administered directly by the selected directory admin.
+# Remove impersonation settings left by the GKE steps.
+unset CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT
+unset GOOGLE_OAUTH_ACCESS_TOKEN
+
 GROUP_EMAIL="${GROUP_EMAIL:-pgrp-gcp-sbx01@sonmap.net}"
 ORGANIZATION="${ORGANIZATION:-sonmap.net}"
 DISPLAY_NAME="${DISPLAY_NAME:-GCP Sandbox 01}"
