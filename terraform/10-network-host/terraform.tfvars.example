@@ -5,6 +5,7 @@ network_name          = "vpc-prod-edp-hub"
 
 admin_subnet_cidr     = "172.31.10.0/24"
 infra_admin_subnet_cidr = "172.32.10.0/24"
+infra_vm_service_account = "620081195575-compute@developer.gserviceaccount.com"
 alb_frontend_cidr     = "172.31.96.0/27"
 alb_frontend_ip       = "172.31.96.10"
 alb_proxy_cidr        = "10.252.2.0/26"

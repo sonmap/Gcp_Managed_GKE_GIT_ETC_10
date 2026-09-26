@@ -28,6 +28,11 @@ variable "infra_admin_subnet_cidr" {
   default = "172.32.10.0/24"
 }
 
+variable "infra_vm_service_account" {
+  type    = string
+  default = "620081195575-compute@developer.gserviceaccount.com"
+}
+
 variable "alb_frontend_cidr" {
   type = string
   default = "172.31.96.0/27" 

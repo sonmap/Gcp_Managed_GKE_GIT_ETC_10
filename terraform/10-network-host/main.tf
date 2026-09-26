@@ -120,3 +120,22 @@ resource "google_compute_firewall" "gke_gateway_health_checks" {
     ports    = ["1-65535"]
   }
 }
+
+resource "google_compute_firewall" "iap_ssh_infra_admin" {
+  project     = var.host_project_id
+  name        = "fw-allow-iap-ssh-infra-admin"
+  network     = google_compute_network.shared.name
+  direction   = "INGRESS"
+  priority    = 1000
+  description = "Allow IAP TCP forwarding to infra-son01 SSH."
+
+  source_ranges = ["35.235.240.0/20"]
+  target_service_accounts = [
+    var.infra_vm_service_account
+  ]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+}
