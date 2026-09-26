@@ -28,9 +28,12 @@ variable "gke_pod_range_name" {
   default = "pods-prod-edp-gke-an3"
 }
 
-variable "admin_access_cidr" {
-  type    = string
-  default = "172.31.10.0/24"
+variable "admin_access_cidrs" {
+  type = map(string)
+  default = {
+    instance-son = "172.31.10.0/24"
+    infra-son01  = "172.32.10.0/24"
+  }
 }
 
 variable "control_plane_cidr" {

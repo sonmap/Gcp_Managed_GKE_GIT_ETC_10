@@ -24,8 +24,13 @@ gcloud container clusters get-credentials "${CLUSTER_NAME}" \
   --region="${REGION}" \
   --internal-ip
 
+if ! kubectl --request-timeout=15s get --raw=/readyz >/dev/null; then
+  echo "Cannot reach the GKE private endpoint. Check master authorized networks." >&2
+  exit 1
+fi
+
 for attempt in $(seq 1 30); do
-  if kubectl get gatewayclass gke-l7-global-external-managed >/dev/null 2>&1; then
+  if kubectl --request-timeout=15s get gatewayclass gke-l7-global-external-managed >/dev/null 2>&1; then
     break
   fi
 
@@ -34,6 +39,7 @@ for attempt in $(seq 1 30); do
     exit 1
   fi
 
+  echo "Waiting for GatewayClass (${attempt}/30)..."
   sleep 10
 done
 
