@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+import logging
 import os
 import tempfile
 import time
@@ -16,6 +17,7 @@ from pydantic import BaseModel, Field
 
 app = FastAPI(title="EDP Sandbox Provisioner")
 storage_client = storage.Client()
+logger = logging.getLogger("sandbox-provisioner")
 
 
 class ProvisionRequest(BaseModel):
@@ -342,6 +344,7 @@ def provision(req: ProvisionRequest) -> dict:
         deployment = apply_infrastructure_manager(document)
         apply_gke(document)
     except Exception as exc:
+        logger.exception("Manual provision request failed")
         raise HTTPException(500, str(exc)) from exc
     return {
         "accepted": True,
@@ -370,6 +373,7 @@ async def storage_event(request: Request) -> dict:
         deployment = apply_infrastructure_manager(document)
         apply_gke(document)
     except Exception as exc:
+        logger.exception("Storage event provision request failed")
         raise HTTPException(500, str(exc)) from exc
     return {
         "accepted": True,
