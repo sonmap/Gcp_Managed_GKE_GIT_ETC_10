@@ -65,6 +65,6 @@ variable "cloudrun_subnet_name" {
 
 variable "provisioner_release" {
   type        = string
-  default     = "20260926-jupyterhub4"
+  default     = "20260926-jupyterhub5"
   description = "Changes when a new provisioner image must create a Cloud Run revision."
 }
