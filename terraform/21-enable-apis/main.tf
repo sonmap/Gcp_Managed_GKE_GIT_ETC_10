@@ -70,3 +70,16 @@ resource "google_project_service_identity" "gke" {
 
   depends_on = [google_project_service.all]
 }
+
+resource "google_project_service_identity" "automation" {
+  provider = google-beta
+  for_each = toset([
+    "run.googleapis.com",
+    "eventarc.googleapis.com"
+  ])
+
+  project = var.platform_project_id
+  service = each.value
+
+  depends_on = [google_project_service.all]
+}
