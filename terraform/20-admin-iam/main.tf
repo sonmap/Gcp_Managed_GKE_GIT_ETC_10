@@ -165,7 +165,7 @@ resource "google_service_account_iam_member" "vm_impersonates_gke_admin" {
 }
 
 resource "google_service_account_iam_member" "vm_impersonates_task_admin" {
-  for_each = toset(["project_factory", "project_iam", "data_admin", "lb_admin", "group_admin"])
+  for_each = toset(["project_factory", "project_iam", "data_admin", "lb_admin", "group_admin", "provisioner"])
 
   service_account_id = google_service_account.automation[each.value].name
   role               = "roles/iam.serviceAccountTokenCreator"
