@@ -1,0 +1,12 @@
+platform_project_id = "gcp-sbx-edp-gke01"
+data_project_id     = "gcp-sbx-edp-comn-509423"
+create_project      = false
+project_name        = "EDP Sandbox Common"
+folder_id           = "REPLACE_FOLDER_ID"
+billing_account_id  = "REPLACE_BILLING_ACCOUNT_ID"
+region              = "asia-northeast3"
+task_name           = "task01"
+group_email         = "pgrp-gcp-sbx01@sonmap.net"
+dataset_id          = "task01_dataset"
+bucket_name         = "gcp-sbx-edp-comn-509423-task01-data"
+workload_identity_pool = "gcp-sbx-edp-gke01.svc.id.goog"
