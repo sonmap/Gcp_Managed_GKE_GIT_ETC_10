@@ -23,6 +23,10 @@ data "google_storage_project_service_account" "gcs" {
   project = var.platform_project_id
 }
 
+data "google_project" "automation_platform" {
+  project_id = var.platform_project_id
+}
+
 resource "google_cloud_run_v2_service" "provisioner" {
   count    = var.enable_automation_resources ? 1 : 0
   project  = var.platform_project_id
@@ -80,6 +84,13 @@ resource "google_project_iam_member" "gcs_eventarc_publisher" {
   member  = "serviceAccount:${data.google_storage_project_service_account.gcs.email_address}"
 }
 
+resource "google_storage_bucket_iam_member" "eventarc_bucket_viewer" {
+  count  = var.enable_automation_resources ? 1 : 0
+  bucket = google_storage_bucket.requests.name
+  role   = "roles/storage.bucketViewer"
+  member = "serviceAccount:service-${data.google_project.automation_platform.number}@gcp-sa-eventarc.iam.gserviceaccount.com"
+}
+
 resource "google_cloud_run_v2_service_iam_member" "eventarc_invoker" {
   count    = var.enable_automation_resources ? 1 : 0
   project  = var.platform_project_id
@@ -117,6 +128,7 @@ resource "google_eventarc_trigger" "approved_request" {
 
   depends_on = [
     google_project_iam_member.gcs_eventarc_publisher,
+    google_storage_bucket_iam_member.eventarc_bucket_viewer,
     google_cloud_run_v2_service_iam_member.eventarc_invoker
   ]
 }
