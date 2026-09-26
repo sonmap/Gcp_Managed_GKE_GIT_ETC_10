@@ -62,3 +62,9 @@ variable "cloudrun_subnet_name" {
   type    = string
   default = "subnet-prod-edp-run-an3"
 }
+
+variable "provisioner_release" {
+  type        = string
+  default     = "20260926-6f386f9"
+  description = "Changes when a new provisioner image must create a Cloud Run revision."
+}
