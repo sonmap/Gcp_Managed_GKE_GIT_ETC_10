@@ -251,6 +251,59 @@ def apply_jupyterhub(document: dict) -> None:
         child_env,
     )
 
+    health_policy_name = f"jupyterhub-proxy-{task}"
+    health_policy = {
+        "apiVersion": "networking.gke.io/v1",
+        "kind": "HealthCheckPolicy",
+        "metadata": {"name": health_policy_name, "namespace": namespace},
+        "spec": {
+            "default": {
+                "checkIntervalSec": 15,
+                "timeoutSec": 5,
+                "healthyThreshold": 1,
+                "unhealthyThreshold": 2,
+                "config": {
+                    "type": "HTTP",
+                    "httpHealthCheck": {
+                        "portSpecification": "USE_SERVING_PORT",
+                        "requestPath": "/_chp_healthz",
+                    },
+                },
+            },
+            "targetRef": {
+                "group": "",
+                "kind": "Service",
+                "name": "proxy-public",
+            },
+        },
+    }
+    try:
+        custom.get_namespaced_custom_object(
+            "networking.gke.io",
+            "v1",
+            namespace,
+            "healthcheckpolicies",
+            health_policy_name,
+        )
+        custom.patch_namespaced_custom_object(
+            "networking.gke.io",
+            "v1",
+            namespace,
+            "healthcheckpolicies",
+            health_policy_name,
+            health_policy,
+        )
+    except client.ApiException as exc:
+        if exc.status != 404:
+            raise
+        custom.create_namespaced_custom_object(
+            "networking.gke.io",
+            "v1",
+            namespace,
+            "healthcheckpolicies",
+            health_policy,
+        )
+
     route_name = f"route-{task}"
     route_patch = {
         "spec": {
