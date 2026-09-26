@@ -237,3 +237,11 @@ resource "google_compute_subnetwork_iam_member" "provisioner_run_network_user" {
   role       = "roles/compute.networkUser"
   member     = "serviceAccount:${google_service_account.automation["provisioner"].email}"
 }
+
+resource "google_compute_subnetwork_iam_member" "cloud_run_service_agent_network_user" {
+  project    = var.host_project_id
+  region     = var.region
+  subnetwork = var.cloudrun_subnet_name
+  role       = "roles/compute.networkUser"
+  member     = "serviceAccount:service-${data.google_project.platform.number}@serverless-robot-prod.iam.gserviceaccount.com"
+}
