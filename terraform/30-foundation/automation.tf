@@ -6,7 +6,8 @@ variable "enable_automation_resources" {
 
 variable "provisioner_image" {
   type        = string
-  default     = "asia-northeast3-docker.pkg.dev/gcp-sbx-edp-gke01/ar-sbx-platform/sandbox-provisioner:latest"
+  default     = "asia-northeast3-docker.pkg.dev/gcp-sbx-edp-gke01/ar-sbx-platform/sandbox-provisioner@sha256:ba716fd06331f94da5fe13d86fdfd19d7aea181fafcb1fa2e0ed2b58ab3d0e56"
+  description = "Immutable Artifact Registry image digest for run-sbx-provisioner. Update this digest whenever cloudrun-provisioner source is rebuilt."
 }
 
 data "google_service_account" "provisioner" {
