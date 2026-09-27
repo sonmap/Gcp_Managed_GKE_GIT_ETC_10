@@ -1,7 +1,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG IMAGE_VERSION=4.2.0-r2
+ARG IMAGE_VERSION=4.2.0-r3
 
 USER root
 
@@ -30,5 +30,7 @@ RUN python -m pip install --no-cache-dir \
 RUN printf '%s\n' "sandbox-jupyter-standard ${IMAGE_VERSION}" \
     > /etc/sandbox-image-version
 
+# The actual user home is injected by JupyterHub/KubeSpawner at spawn time.
+# Keep the image neutral instead of hard-coding /home/jovyan.
 USER jovyan
-WORKDIR /home/jovyan
+WORKDIR /home
