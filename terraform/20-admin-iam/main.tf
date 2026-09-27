@@ -28,17 +28,16 @@ locals {
     ])
     project_factory = toset(["roles/config.agent"])
     gke_admin       = toset(["roles/container.admin"])
-    lb_admin  = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
-    build     = toset(["roles/cloudbuild.builds.builder", "roles/config.admin", "roles/container.developer"])
+    lb_admin        = toset(["roles/compute.loadBalancerAdmin", "roles/compute.viewer"])
+    build           = toset(["roles/cloudbuild.builds.builder", "roles/config.admin", "roles/container.developer"])
     provisioner = toset([
       "roles/cloudbuild.builds.editor",
-      "roles/storage.objectAdmin",
-      "roles/storage.bucketViewer",
+      "roles/storage.admin",
       "roles/config.admin",
       "roles/logging.viewer",
       "roles/serviceusage.serviceUsageConsumer"
     ])
-    workflow  = toset(["roles/run.invoker", "roles/eventarc.eventReceiver"])
+    workflow    = toset(["roles/run.invoker", "roles/eventarc.eventReceiver"])
     group_admin = toset(["roles/serviceusage.serviceUsageConsumer"])
   }
 
