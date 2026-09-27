@@ -1,6 +1,11 @@
 steps:
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "${_IMAGE_URI}", "cloudrun-provisioner"]
-images: ["${_IMAGE_URI}"]
+
+images:
+  - "${_IMAGE_URI}"
+
+serviceAccount: projects/gcp-sbx-edp-gke01/serviceAccounts/sa-sbx-build@gcp-sbx-edp-gke01.iam.gserviceaccount.com
+
 options:
   logging: CLOUD_LOGGING_ONLY
