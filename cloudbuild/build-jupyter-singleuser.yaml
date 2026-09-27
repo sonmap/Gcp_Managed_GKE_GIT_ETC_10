@@ -18,5 +18,7 @@ steps:
 images:
   - ${_REGISTRY}/jupyterhub-k8s-singleuser-standard:4.2.0-r3
 
+serviceAccount: projects/gcp-sbx-edp-gke01/serviceAccounts/sa-sbx-build@gcp-sbx-edp-gke01.iam.gserviceaccount.com
+
 options:
   logging: CLOUD_LOGGING_ONLY
