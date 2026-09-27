@@ -184,17 +184,36 @@ def apply_jupyterhub(document: dict) -> None:
                     "login_service": "Sonmap Google Account",
                 },
                 "KubeSpawner": {
-                    "working_dir": "/home/{unescaped_username}",
-                    "notebook_dir": "/home/{unescaped_username}",
                     "default_url": "/lab",
                 },
             },
             "extraConfig": {
                 "10-user-home": """
 def set_user_home(spawner):
+    # Use the authenticated Google account exactly as the Linux home path.
+    # Do not depend on KubeSpawner's version-specific unescaped_username template.
     home = f"/home/{spawner.user.name}"
     spawner.environment["HOME"] = home
     spawner.environment["JUPYTERHUB_USER_HOME"] = home
+    spawner.working_dir = home
+    spawner.notebook_dir = home
+
+    # Zero-to-JupyterHub creates the dynamic PVC mount using {username}.
+    # Replace only the home mount path with the raw authenticated username;
+    # the PVC name itself remains Kubernetes-safe and unchanged.
+    mounts = spawner.volume_mounts
+    if isinstance(mounts, list):
+        for mount in mounts:
+            if isinstance(mount, dict) and mount.get("mountPath") == "/home/{username}":
+                mount["mountPath"] = home
+            elif isinstance(mount, dict) and mount.get("mount_path") == "/home/{username}":
+                mount["mount_path"] = home
+    elif isinstance(mounts, dict):
+        for mount in mounts.values():
+            if isinstance(mount, dict) and mount.get("mountPath") == "/home/{username}":
+                mount["mountPath"] = home
+            elif isinstance(mount, dict) and mount.get("mount_path") == "/home/{username}":
+                mount["mount_path"] = home
 
 c.Spawner.pre_spawn_hook = set_user_home
 """,
@@ -227,7 +246,7 @@ c.Spawner.pre_spawn_hook = set_user_home
             "memory": {"guarantee": "1G", "limit": "1G"},
             "storage": {
                 "type": "dynamic",
-                "homeMountPath": "/home/{unescaped_username}",
+                "homeMountPath": "/home/{username}",
                 "capacity": "40Gi",
                 "dynamic": {"storageClass": "standard-rwo"},
             },
