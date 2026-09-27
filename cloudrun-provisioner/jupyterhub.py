@@ -183,6 +183,21 @@ def apply_jupyterhub(document: dict) -> None:
                     "strip_domain": False,
                     "login_service": "Sonmap Google Account",
                 },
+                "KubeSpawner": {
+                    "working_dir": "/home/{unescaped_username}",
+                    "notebook_dir": "/home/{unescaped_username}",
+                    "default_url": "/lab",
+                },
+            },
+            "extraConfig": {
+                "10-user-home": """
+def set_user_home(spawner):
+    home = f"/home/{spawner.user.name}"
+    spawner.environment["HOME"] = home
+    spawner.environment["JUPYTERHUB_USER_HOME"] = home
+
+c.Spawner.pre_spawn_hook = set_user_home
+""",
             },
             "resources": {
                 "requests": {"cpu": "250m", "memory": "512Mi"},
@@ -205,14 +220,14 @@ def apply_jupyterhub(document: dict) -> None:
         "singleuser": {
             "image": {
                 "name": f"{image_prefix}/jupyterhub-k8s-singleuser-standard",
-                "tag": "4.2.0-r2",
+                "tag": "4.2.0-r3",
             },
             "serviceAccountName": ksa,
             "cpu": {"guarantee": 0.5, "limit": 0.5},
             "memory": {"guarantee": "1G", "limit": "1G"},
             "storage": {
                 "type": "dynamic",
-                "homeMountPath": "/home/{username}",
+                "homeMountPath": "/home/{unescaped_username}",
                 "capacity": "40Gi",
                 "dynamic": {"storageClass": "standard-rwo"},
             },
