@@ -90,6 +90,14 @@ resource "google_bigquery_dataset_iam_member" "source_gsa_viewer" {
   member     = "serviceAccount:${google_service_account.jupyter.email}"
 }
 
+resource "google_bigquery_dataset_iam_member" "source_group_viewer" {
+  provider   = google.data_admin
+  project    = var.source_data_project_id
+  dataset_id = var.source_dataset_id
+  role       = "roles/bigquery.dataViewer"
+  member     = "group:${var.group_email}"
+}
+
 resource "google_storage_bucket" "task" {
   provider                    = google.data_admin
   project                     = local.effective_project_id
