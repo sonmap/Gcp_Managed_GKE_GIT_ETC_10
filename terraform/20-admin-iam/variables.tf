@@ -59,3 +59,9 @@ variable "source_dataset_id" {
   default     = "dlk_sample"
   description = "Existing BigQuery dataset shared with task Jupyter GSAs."
 }
+
+variable "jupyter_gsa_email" {
+  type        = string
+  default     = "gsa-jupyter-task01@gcp-sbx-edp-comn-509423.iam.gserviceaccount.com"
+  description = "Existing task Jupyter GSA that receives BigQuery Job User in the task data project."
+}
