@@ -46,11 +46,23 @@ resource "google_service_account" "jupyter" {
   display_name = "Jupyter ${var.task_name}"
 }
 
+resource "google_project_iam_member" "jupyter_query_job_user" {
+  provider = google.project_iam
+  project  = local.effective_project_id
+  role     = "roles/bigquery.jobUser"
+  member   = "serviceAccount:${google_service_account.jupyter.email}"
+
+  depends_on = [
+    google_project_service.task,
+    google_service_account.jupyter,
+  ]
+}
+
 resource "google_bigquery_dataset" "task" {
-  provider                  = google.data_admin
-  project                   = local.effective_project_id
-  dataset_id                = var.dataset_id
-  location                  = var.region
+  provider                   = google.data_admin
+  project                    = local.effective_project_id
+  dataset_id                 = var.dataset_id
+  location                   = var.region
   delete_contents_on_destroy = false
 }
 
