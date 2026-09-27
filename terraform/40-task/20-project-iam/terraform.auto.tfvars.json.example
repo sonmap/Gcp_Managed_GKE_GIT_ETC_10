@@ -1,5 +1,6 @@
 {
   "project_id": "gcp-sbx-edp-comn-509423",
   "group_email": "pgrp-gcp-sbx01@sonmap.net",
+  "jupyter_gsa_email": "gsa-jupyter-task01@gcp-sbx-edp-comn-509423.iam.gserviceaccount.com",
   "project_iam_service_account": "sa-im-project-iam@gcp-sbx-edp-gke01.iam.gserviceaccount.com"
 }
