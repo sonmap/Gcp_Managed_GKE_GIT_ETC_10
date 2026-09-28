@@ -185,22 +185,37 @@ def create_or_patch(read, create, patch, name: str, body):
 
 
 def apply_gke(document: dict) -> None:
+    """Create only task-scoped prerequisites.
+
+    Hub and Proxy are group-scoped resources and are created by apply_jupyterhub().
+    A task namespace contains the task KSA, quota/policy and spawned user notebook
+    pods/PVCs only.
+    """
     api_client = kubernetes_api(document)
     core = client.CoreV1Api(api_client)
-    apps = client.AppsV1Api(api_client)
     networking = client.NetworkingV1Api(api_client)
-    custom = client.CustomObjectsApi(api_client)
     task = require(document, "task.namespace")
+    group = str(document.get("task", {}).get("group", "general")).lower()
+    if group == "normal":
+        group = "general"
+    if group not in {"general", "secret", "always"}:
+        raise HTTPException(400, "task.group must be one of: general, secret, always")
+
     gsa = f"gsa-jupyter-{task}@{require(document, 'project.project_id')}.iam.gserviceaccount.com"
-    hostname = require(document, "gke.jupyter_domain")
-    labels = {"app": "task-test-web", "task": task}
+    namespace = client.V1Namespace(
+        metadata=client.V1ObjectMeta(
+            name=task,
+            labels={"jupyterhub-task": task, "jupyterhub-group": group},
+        )
+    )
     create_or_patch(
         core.read_namespace,
         core.create_namespace,
         core.patch_namespace,
         task,
-        client.V1Namespace(metadata=client.V1ObjectMeta(name=task)),
+        namespace,
     )
+
     ksa_name = f"ksa-jupyter-{task}"
     ksa = client.V1ServiceAccount(
         metadata=client.V1ObjectMeta(
@@ -216,6 +231,7 @@ def apply_gke(document: dict) -> None:
         ksa_name,
         ksa,
     )
+
     quota_name = f"quota-{task}"
     quota = client.V1ResourceQuota(
         metadata=client.V1ObjectMeta(name=quota_name, namespace=task),
@@ -233,11 +249,13 @@ def apply_gke(document: dict) -> None:
         quota_name,
         quota,
     )
+
     deny_name = "default-deny-ingress"
     deny = client.V1NetworkPolicy(
         metadata=client.V1ObjectMeta(name=deny_name, namespace=task),
         spec=client.V1NetworkPolicySpec(
-            pod_selector=client.V1LabelSelector(), policy_types=["Ingress"]
+            pod_selector=client.V1LabelSelector(),
+            policy_types=["Ingress"],
         ),
     )
     create_or_patch(
@@ -247,94 +265,6 @@ def apply_gke(document: dict) -> None:
         deny_name,
         deny,
     )
-    deployment_name = f"web-{task}"
-    deployment = client.V1Deployment(
-        metadata=client.V1ObjectMeta(name=deployment_name, namespace=task),
-        spec=client.V1DeploymentSpec(
-            replicas=1,
-            selector=client.V1LabelSelector(match_labels=labels),
-            template=client.V1PodTemplateSpec(
-                metadata=client.V1ObjectMeta(labels=labels),
-                spec=client.V1PodSpec(
-                    service_account_name=ksa_name,
-                    containers=[client.V1Container(
-                        name="hello-app",
-                        image="us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0",
-                        ports=[client.V1ContainerPort(container_port=8080, name="http")],
-                        resources=client.V1ResourceRequirements(
-                            requests={"cpu": "250m", "memory": "256Mi"},
-                            limits={"cpu": "250m", "memory": "256Mi"},
-                        ),
-                    )],
-                ),
-            ),
-        ),
-    )
-    create_or_patch(
-        lambda name: apps.read_namespaced_deployment(name, task),
-        lambda body: apps.create_namespaced_deployment(task, body),
-        lambda name, body: apps.patch_namespaced_deployment(name, task, body),
-        deployment_name,
-        deployment,
-    )
-    service = client.V1Service(
-        metadata=client.V1ObjectMeta(name=deployment_name, namespace=task),
-        spec=client.V1ServiceSpec(
-            selector=labels,
-            ports=[client.V1ServicePort(name="http", port=80, target_port="http")],
-        ),
-    )
-    create_or_patch(
-        lambda name: core.read_namespaced_service(name, task),
-        lambda body: core.create_namespaced_service(task, body),
-        lambda name, body: core.patch_namespaced_service(name, task, body),
-        deployment_name,
-        service,
-    )
-    allow_name = "allow-gateway-to-test-web"
-    allow = client.V1NetworkPolicy(
-        metadata=client.V1ObjectMeta(name=allow_name, namespace=task),
-        spec=client.V1NetworkPolicySpec(
-            pod_selector=client.V1LabelSelector(match_labels=labels),
-            ingress=[client.V1NetworkPolicyIngressRule()],
-            policy_types=["Ingress"],
-        ),
-    )
-    create_or_patch(
-        lambda name: networking.read_namespaced_network_policy(name, task),
-        lambda body: networking.create_namespaced_network_policy(task, body),
-        lambda name, body: networking.patch_namespaced_network_policy(name, task, body),
-        allow_name,
-        allow,
-    )
-    route_name = f"route-{task}"
-    route = {
-        "apiVersion": "gateway.networking.k8s.io/v1",
-        "kind": "HTTPRoute",
-        "metadata": {"name": route_name, "namespace": task},
-        "spec": {
-            "parentRefs": [{
-                "name": "external-http-gateway",
-                "namespace": "gateway-system",
-                "sectionName": "http",
-            }],
-            "hostnames": [hostname],
-            "rules": [{"backendRefs": [{"name": deployment_name, "port": 80}]}],
-        },
-    }
-    try:
-        custom.get_namespaced_custom_object(
-            "gateway.networking.k8s.io", "v1", task, "httproutes", route_name
-        )
-        custom.patch_namespaced_custom_object(
-            "gateway.networking.k8s.io", "v1", task, "httproutes", route_name, route
-        )
-    except client.ApiException as exc:
-        if exc.status != 404:
-            raise
-        custom.create_namespaced_custom_object(
-            "gateway.networking.k8s.io", "v1", task, "httproutes", route
-        )
 
 
 @app.get("/healthz")
