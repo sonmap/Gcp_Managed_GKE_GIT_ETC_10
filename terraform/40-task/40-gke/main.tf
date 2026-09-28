@@ -29,6 +29,16 @@ variable "task_name" {
   default = "task01"
 }
 
+variable "task_group" {
+  type    = string
+  default = "general"
+
+  validation {
+    condition     = contains(["general", "secret", "always"], var.task_group)
+    error_message = "task_group must be one of: general, secret, always."
+  }
+}
+
 variable "jupyter_gsa_email" {
   type    = string
   default = "gsa-jupyter-task01@gcp-sbx-edp-comn-509423.iam.gserviceaccount.com"
@@ -49,30 +59,6 @@ variable "kube_context" {
   default = "gke_gcp-sbx-edp-gke01_asia-northeast3_gke-sbx-edp-main-an3"
 }
 
-variable "gateway_namespace" {
-  type    = string
-  default = "gateway-system"
-}
-
-variable "gateway_name" {
-  type    = string
-  default = "external-http-gateway"
-}
-
-variable "gateway_hostname_suffix" {
-  type    = string
-  default = "sonmap.net"
-}
-
-locals {
-  task_hostname        = "jupyter-${var.task_name}.${trimsuffix(var.gateway_hostname_suffix, ".")}"
-  backend_service_name = "web-${var.task_name}"
-  app_labels = {
-    app  = "task-test-web"
-    task = var.task_name
-  }
-}
-
 provider "kubernetes" {
   config_path    = pathexpand(var.kubeconfig_path)
   config_context = var.kube_context
@@ -81,6 +67,10 @@ provider "kubernetes" {
 resource "kubernetes_namespace_v1" "task" {
   metadata {
     name = var.task_name
+    labels = {
+      "jupyterhub-task"  = var.task_name
+      "jupyterhub-group" = var.task_group
+    }
   }
 }
 
@@ -122,130 +112,14 @@ resource "kubernetes_network_policy_v1" "default_deny_ingress" {
   }
 }
 
-resource "kubernetes_deployment_v1" "test_web" {
-  metadata {
-    name      = local.backend_service_name
-    namespace = kubernetes_namespace_v1.task.metadata[0].name
-  }
-
-  spec {
-    replicas = 1
-
-    selector {
-      match_labels = local.app_labels
-    }
-
-    template {
-      metadata {
-        labels = local.app_labels
-      }
-
-      spec {
-        service_account_name = kubernetes_service_account_v1.jupyter.metadata[0].name
-
-        container {
-          name  = "hello-app"
-          image = "us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0"
-
-          port {
-            name           = "http"
-            container_port = 8080
-          }
-
-          resources {
-            requests = {
-              cpu    = "250m"
-              memory = "256Mi"
-            }
-            limits = {
-              cpu    = "250m"
-              memory = "256Mi"
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_service_v1" "test_web" {
-  metadata {
-    name      = local.backend_service_name
-    namespace = kubernetes_namespace_v1.task.metadata[0].name
-  }
-
-  spec {
-    selector = local.app_labels
-
-    port {
-      name        = "http"
-      port        = 80
-      target_port = "http"
-    }
-
-    type = "ClusterIP"
-  }
-}
-
-resource "kubernetes_network_policy_v1" "allow_gateway_to_test_web" {
-  metadata {
-    name      = "allow-gateway-to-test-web"
-    namespace = kubernetes_namespace_v1.task.metadata[0].name
-  }
-
-  spec {
-    pod_selector {
-      match_labels = local.app_labels
-    }
-
-    ingress {}
-    policy_types = ["Ingress"]
-  }
-}
-
-resource "kubernetes_manifest" "task_route" {
-  manifest = {
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "HTTPRoute"
-    metadata = {
-      name      = "route-${var.task_name}"
-      namespace = kubernetes_namespace_v1.task.metadata[0].name
-    }
-    spec = {
-      parentRefs = [{
-        group       = "gateway.networking.k8s.io"
-        kind        = "Gateway"
-        name        = var.gateway_name
-        namespace   = var.gateway_namespace
-        sectionName = "http"
-      }]
-      hostnames = [local.task_hostname]
-      rules = [{
-        matches = [{
-          path = {
-            type  = "PathPrefix"
-            value = "/"
-          }
-        }]
-        backendRefs = [{
-          group = ""
-          kind  = "Service"
-          name  = kubernetes_service_v1.test_web.metadata[0].name
-          port  = 80
-        }]
-      }]
-    }
-  }
-}
-
 output "task_namespace" {
   value = kubernetes_namespace_v1.task.metadata[0].name
 }
 
-output "task_hostname" {
-  value = local.task_hostname
+output "task_group" {
+  value = var.task_group
 }
 
-output "gateway_parent" {
-  value = "${var.gateway_namespace}/${var.gateway_name}"
+output "jupyter_ksa" {
+  value = kubernetes_service_account_v1.jupyter.metadata[0].name
 }
