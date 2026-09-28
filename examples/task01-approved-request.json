@@ -1,7 +1,11 @@
 {
   "request_id": "REQ-TASK01-001",
   "action": "CREATE",
-  "task": { "name": "task01", "namespace": "task01" },
+  "task": {
+    "name": "task01",
+    "namespace": "task01",
+    "group": "general"
+  },
   "identity": {
     "group_email": "pgrp-gcp-sbx01@sonmap.net",
     "members": ["user01@sonmap.net", "user02@sonmap.net"]
@@ -24,7 +28,11 @@
     "cluster_name": "gke-sbx-edp-main-an3",
     "location": "asia-northeast3",
     "namespace": "task01",
-    "jupyter_domain": "jupyter-task01.sonmap.net"
+    "jupyter_domain": "jupyter-general.sonmap.net",
+    "group_jupyter_domain": "jupyter-general.sonmap.net"
   },
-  "source": { "repository": "sonmap/Gcp_Managed_GKE_GIT_ETC_10", "commit_sha": "REPLACE_WITH_APPROVED_40_CHARACTER_COMMIT_SHA" }
+  "source": {
+    "repository": "sonmap/Gcp_Managed_GKE_GIT_ETC_10",
+    "commit_sha": "REPLACE_WITH_APPROVED_40_CHARACTER_COMMIT_SHA"
+  }
 }
